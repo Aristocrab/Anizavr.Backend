@@ -478,3 +478,6 @@ $RECYCLE.BIN/
 
 # Ignore constants
 Application/Shared/Constants.cs
+
+# Ignore database
+*.db
