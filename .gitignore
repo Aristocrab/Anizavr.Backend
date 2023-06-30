@@ -405,7 +405,6 @@ FodyWeavers.xsd
 ## Visual studio for Mac
 ##
 
-
 # globs
 Makefile.in
 *.userprefs
@@ -476,3 +475,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Ignore constants
+Application/Shared/Constants.cs
