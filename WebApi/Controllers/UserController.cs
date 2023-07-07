@@ -43,14 +43,28 @@ public class UserController : BaseController
         var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
         return jwtToken;
     }
+    
+    [AllowAnonymous]
+    [HttpGet("getUsersLeaderbord")]
+    public async Task<List<UserDto>> GetUsersLeaderbord()
+    {
+        return await _userService.GetUsersLeaderbord();
+    }
+    
+    [AllowAnonymous]
+    [HttpGet("getUser/{username}")]
+    public async Task<UserDto> GetUser(string username)
+    {
+        return await _userService.GetUser(username);
+    }
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<string> Register(RegisterDto registerDto)
+    public async Task<string> Register([FromForm] RegisterDto registerDto)
     {
         var userId = await _userService.Register(registerDto);
         return GenerateJwtToken(userId);
-    }
+    } 
 
     [AllowAnonymous]
     [HttpPost("login")]
@@ -60,12 +74,24 @@ public class UserController : BaseController
         return GenerateJwtToken(userId);
     }
     
-    [HttpGet("getUser")]
-    public async Task<UserDto> GetUser()
+    [HttpPost("changeAvatar")]
+    public async Task<string> ChangeAvatar(IFormFile avatar)
+    {
+        return await _userService.ChangeUserAvatar(UserId, avatar);
+    }
+    
+    [HttpGet("getCurrentUser")]
+    public async Task<UserDto?> GetCurrentUser()
     {
         return await _userService.GetUser(UserId);
     }
 
+    [HttpPost("addToWatched")]
+    public async Task AddAnimeToWatchedList(long animeId, int userScore)
+    {
+        await _userService.AddAnimeToWatchedList(UserId, animeId, userScore);
+    }
+    
     [HttpPost("addToWatching")]
     public async Task AddAnimeToWatchingList(long animeId)
     {
