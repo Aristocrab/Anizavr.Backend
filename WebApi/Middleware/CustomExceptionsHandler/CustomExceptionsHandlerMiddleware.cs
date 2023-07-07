@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.Json;
 using Application.Exceptions;
 using Serilog;
 
@@ -32,14 +33,26 @@ public class CustomExceptionsHandlerMiddleware
             NotFoundException => HttpStatusCode.NotFound,
             UserAlreadyExistsException => HttpStatusCode.Conflict,
             WrongPasswordException => HttpStatusCode.Unauthorized,
+            ArgumentException or InvalidOperationException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int) code;
+        if (exception is InvalidOperationException invalidOperationException)
+        {
+            exception = invalidOperationException.InnerException ?? invalidOperationException;
+        }
 
-        Log.Error(exception.Message);
+        var error = new
+        {
+            StatusCode = code,
+            ErrorMessage = exception.Message
+        };
+        
+        Log.Error("[{StatusCodeId} {StatusCode}] {ErrorMessage}", (int)error.StatusCode, error.StatusCode, error.ErrorMessage);
 
-        return context.Response.WriteAsync(exception.Message);
+        var errorJson = JsonSerializer.Serialize(error);
+        return context.Response.WriteAsync(errorJson);
     }
 }

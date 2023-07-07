@@ -8,6 +8,7 @@ using Application.ShikimoriApi;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -25,9 +26,18 @@ public static class ConfigureServices
 {
     public static void AddApiServices(this WebApplicationBuilder builder)
     {
-        // AspNet
-        builder.Services.AddControllers();
+        // Main todo
         builder.Services.AddResponseCaching();
+        builder.Services.AddControllers(options =>
+        {
+            options.CacheProfiles.Add("Default",
+                new CacheProfile
+                {
+                    Duration = 120,
+                    Location = ResponseCacheLocation.Any,
+                    VaryByQueryKeys = new []{ "*" }
+                });
+        });
         
         // Serilog
         Log.Logger = new LoggerConfiguration()
