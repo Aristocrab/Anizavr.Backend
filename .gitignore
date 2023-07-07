@@ -481,3 +481,6 @@ Application/Shared/Constants.cs
 
 # Ignore database
 *.db
+
+# Ignore images
+WebApi/Images/
