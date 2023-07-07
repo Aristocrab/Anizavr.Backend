@@ -26,4 +26,8 @@
       <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Images\Avatars" />
+    </ItemGroup>
+
 </Project>
