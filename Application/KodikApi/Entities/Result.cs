@@ -8,15 +8,15 @@ public class Result
     public required string Type { get; set; }
     public required string Link { get; set; }
     public required string Title { get; set; }
-    public required string Title_Orig { get; set; }
-    public required string Other_Title { get; set; }
+    public string? Title_Orig { get; set; }
+    public string? Other_Title { get; set; }
     public required Translation Translation { get; set; }
-    public required int Year { get; set; }
-    public required int Episodes_Count { get; set; }
+    public int Year { get; set; }
+    public int? Episodes_Count { get; set; }
     public required List<string> Screenshots { get; set; }
     
     [JsonProperty("material_data")]
-    public required MaterialData Material_Data { get; set; }
+    public MaterialData? Material_Data { get; set; }
  }
 
 public class MaterialData
