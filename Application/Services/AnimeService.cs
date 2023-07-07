@@ -1,6 +1,7 @@
 ﻿using Application.AnimeSkipApi;
 using Application.AnimeSkipApi.Entities;
 using Application.Entities;
+using Application.Exceptions;
 using Application.KodikApi;
 using Application.KodikApi.Entities;
 using Application.ShikimoriApi;
@@ -8,6 +9,7 @@ using FuzzySharp;
 using Mapster;
 using ShikimoriSharp;
 using ShikimoriSharp.AdditionalRequests;
+using ShikimoriSharp.Classes;
 using ShikimoriSharp.Enums;
 using ShikimoriSharp.Settings;
 using Anime = Application.Entities.Anime;
@@ -34,7 +36,16 @@ public class AnimeService
 
     public async Task<Anime> GetAnimeById(long id)
     {
-        var shikimoriDetails = await _shikimoriClient.Animes.GetAnime(id);
+        AnimeID shikimoriDetails;
+        try
+        {
+            shikimoriDetails = await _shikimoriClient.Animes.GetAnime(id);
+        }
+        catch
+        {
+            throw new NotFoundException(nameof(id), id.ToString());
+        }
+        
         var kodikDetails = await _kodikApi.GetAnime(id);
         var timestamps = await GetTimestampsById(id);
 
@@ -89,7 +100,7 @@ public class AnimeService
 
         // Взять по одному переводу с каждого аниме
         // Сортировка по совпадению текста + приоритет для "[ТВ-*]"
-        // todo: спарсить JSON со всеми аниме и сделать нормальный поиск
+        // todo: спарсить JSON со всеми аниме и сделать нормальный поиск?
         var distinctResults = search.Results
             .DistinctBy(x => x.Shikimori_Id)
             .OrderByDescending(x => Fuzz.Ratio(query, x.Title) + (x.Title.Contains('[') ? 100 : 0)) 
@@ -101,7 +112,7 @@ public class AnimeService
         foreach (var result in search.Results)
         {
             // Костыль, чтоб постеры брались с Шикимори
-            result.Material_Data.Poster_Url = $"https://shikimori.me/system/animes/original/{result.Shikimori_Id}.jpg?1674378220";
+            result.Material_Data!.Poster_Url = $"https://shikimori.me/system/animes/original/{result.Shikimori_Id}.jpg?1674378220";
         }
         
         return search;
