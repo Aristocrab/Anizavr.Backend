@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Application.Exceptions;
+using FluentValidation;
 using Serilog;
 
 namespace WebApi.Middleware.CustomExceptionsHandler;
@@ -33,21 +34,26 @@ public class CustomExceptionsHandlerMiddleware
             NotFoundException => HttpStatusCode.NotFound,
             UserAlreadyExistsException => HttpStatusCode.Conflict,
             WrongPasswordException => HttpStatusCode.Unauthorized,
-            ArgumentException or InvalidOperationException => HttpStatusCode.BadRequest,
+            ArgumentException or InvalidOperationException or ValidationException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
-
+        var errorMessage = exception.Message;
+        
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int) code;
         if (exception is InvalidOperationException invalidOperationException)
         {
             exception = invalidOperationException.InnerException ?? invalidOperationException;
         }
+        if (exception is ValidationException validationException)
+        {
+            errorMessage = validationException.Errors.First().ErrorMessage;
+        }
 
         var error = new
         {
             StatusCode = code,
-            ErrorMessage = exception.Message
+            ErrorMessage = errorMessage
         };
         
         Log.Error("[{StatusCodeId} {StatusCode}] {ErrorMessage}", (int)error.StatusCode, error.StatusCode, error.ErrorMessage);

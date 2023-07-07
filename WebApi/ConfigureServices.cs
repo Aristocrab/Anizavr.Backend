@@ -5,6 +5,8 @@ using Application.KodikApi;
 using Application.Services;
 using Application.Shared;
 using Application.ShikimoriApi;
+using Application.Validators;
+using FluentValidation;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
@@ -45,6 +47,10 @@ public static class ConfigureServices
             .WriteTo.Console()
             .CreateLogger();
         builder.Host.UseSerilog();
+        
+        // FluentValidation
+        ValidatorOptions.Global.LanguageManager.Enabled = false;
+        builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidatior>();
 
         // Shikimori
         var logger = Substitute.For<ILogger>();

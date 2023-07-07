@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Entities;
 using Application.Exceptions;
+using FluentValidation;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -13,15 +14,22 @@ public class UserService
 {
     private readonly UserDbContext _dbContext;
     private readonly ShikimoriClient _shikimoriClient;
+    private readonly IValidator<RegisterDto> _registerDtoValidator;
+    private readonly IValidator<LoginDto> _loginDtoValidator;
 
-    public UserService(UserDbContext dbContext, ShikimoriClient shikimoriClient)
+    public UserService(UserDbContext dbContext, ShikimoriClient shikimoriClient, 
+        IValidator<RegisterDto> registerDtoValidator, IValidator<LoginDto> loginDtoValidator)
     {
         _dbContext = dbContext;
         _shikimoriClient = shikimoriClient;
+        _registerDtoValidator = registerDtoValidator;
+        _loginDtoValidator = loginDtoValidator;
     }
 
     public async Task<Guid> Register(RegisterDto registerDto)
     {
+        await _registerDtoValidator.ValidateAndThrowAsync(registerDto);
+        
         if (_dbContext.Users.Any(x => x.Username == registerDto.Username))
         {
             throw new UserAlreadyExistsException(nameof(registerDto.Username), registerDto.Username);
@@ -56,6 +64,8 @@ public class UserService
     
     public async Task<Guid> Login(LoginDto loginDto)
     {
+        await _loginDtoValidator.ValidateAndThrowAsync(loginDto);
+        
         var user = await _dbContext.Users
             .FirstOrDefaultAsync(x => x.Username == loginDto.Username);
         if (user is null)
