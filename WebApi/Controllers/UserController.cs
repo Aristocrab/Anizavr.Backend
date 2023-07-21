@@ -45,22 +45,27 @@ public class UserController : BaseController
     }
     
     [AllowAnonymous]
-    [HttpGet("getUsersLeaderbord")]
-    public async Task<List<UserDto>> GetUsersLeaderbord()
-    {
-        return await _userService.GetUsersLeaderbord();
-    }
-    
-    [AllowAnonymous]
     [HttpGet("getUser/{username}")]
     public async Task<UserDto> GetUser(string username)
     {
         return await _userService.GetUser(username);
     }
+    
+    [HttpGet("getCurrentUser")]
+    public async Task<UserDto?> GetCurrentUser()
+    {
+        return await _userService.GetUser(UserId);
+    }
+    
+    [HttpGet("getComments/{animeId}")]
+    public async Task<List<CommentDto>> GetComments(long animeId)
+    {
+        return await _userService.GetAnimeComments(animeId);
+    }
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<string> Register([FromForm] RegisterDto registerDto)
+    public async Task<string> Register(RegisterDto registerDto)
     {
         var userId = await _userService.Register(registerDto);
         return GenerateJwtToken(userId);
@@ -74,28 +79,41 @@ public class UserController : BaseController
         return GenerateJwtToken(userId);
     }
     
+    [AllowAnonymous]
+    [HttpGet("getUsersLeaderbord")]
+    public async Task<List<UserDto>> GetUsersLeaderbord()
+    {
+        return await _userService.GetUsersLeaderbord();
+    }
+    
     [HttpPost("changeAvatar")]
     public async Task<string> ChangeAvatar(IFormFile avatar)
     {
         return await _userService.ChangeUserAvatar(UserId, avatar);
     }
     
-    [HttpGet("getCurrentUser")]
-    public async Task<UserDto?> GetCurrentUser()
+    [HttpPost("addComment")]
+    public async Task AddComment([FromBody] AddCommentDto addCommentDto)
     {
-        return await _userService.GetUser(UserId);
+        await _userService.AddCommentToAnime(UserId, addCommentDto.AnimeId, addCommentDto.Text);
     }
 
-    [HttpPost("addToWatched")]
-    public async Task AddAnimeToWatchedList(long animeId, int userScore)
+    [HttpPost("addToWatched/{animeId}")]
+    public async Task AddAnimeToWatchedList(long animeId, int? userScore = null)
     {
         await _userService.AddAnimeToWatchedList(UserId, animeId, userScore);
     }
     
-    [HttpPost("addToWatching")]
-    public async Task AddAnimeToWatchingList(long animeId)
+    [HttpPost("addToWatching/{animeId}")]
+    public async Task AddAnimeToWatchingList(long animeId, int currentEpisode, float secondsTotal)
     {
-        await _userService.AddAnimeToWatchingList(UserId, animeId);
+        await _userService.AddAnimeToWatchingList(UserId, animeId, currentEpisode, secondsTotal);
+    }
+    
+    [HttpPost("addToWishlist/{animeId}")]
+    public async Task AddAnimeToWishlist(long animeId)
+    {
+        await _userService.AddAnimeToWishlist(UserId, animeId);
     }
 
     [HttpPut("finishEpisode")]
@@ -114,5 +132,11 @@ public class UserController : BaseController
     public async Task RemoveAnimeFromWatchingList(long animeId)
     {
         await _userService.RemoveAnimeFromWatchingList(UserId, animeId);
+    }
+    
+    [HttpDelete("removeFromWishlist")]
+    public async Task RemoveAnimeFromWishlist(long animeId)
+    {
+        await _userService.RemoveAnimeFromWishlist(UserId, animeId);
     }
 }

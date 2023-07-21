@@ -13,7 +13,7 @@ public class BaseController : ControllerBase
         {
             if (HttpContext.User.Identity is not ClaimsIdentity identity)
             {
-                throw new NotFoundException("user", "user");
+                throw new NotFoundException("Пользователь", "id", Guid.Empty.ToString());
             }
             
             var userClaims = identity.Claims.ToArray();

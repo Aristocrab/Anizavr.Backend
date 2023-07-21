@@ -1,9 +1,8 @@
-﻿using Application.Entities;
-using Application.KodikApi.Entities;
+﻿using Application.KodikApi.Entities;
 using Application.Services;
+using Application.ShikimoriApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShikimoriSharp.AdditionalRequests;
 using WebApi.Controllers.Shared;
 using Anime = Application.Entities.Anime;
 
@@ -11,7 +10,7 @@ namespace WebApi.Controllers;
 
 [AllowAnonymous]
 [Route("/api")]
-[ResponseCache(CacheProfileName = "Default")]
+// [ResponseCache(CacheProfileName = "Default")]
 public class AnimeController : BaseController
 {
     private readonly AnimeService _animeService;
@@ -27,14 +26,8 @@ public class AnimeController : BaseController
         return await _animeService.GetAnimeById(id);
     }
 
-    [HttpGet("getFranchise/{id}")]
-    public async Task<Franchise> GetFranchise(int id)
-    {
-        return await _animeService.GetFranchise(id);
-    }
-
     [HttpGet("getSimilarAnime/{id}")]
-    public async Task<ShikimoriAnime[]> GetSimilarAnime(int id)
+    public async Task<List<AnimePreview>> GetSimilarAnime(int id)
     {
         return await _animeService.GetSimilarAnime(id);
     }
@@ -46,9 +39,9 @@ public class AnimeController : BaseController
     }
 
     [HttpGet("searchAnime")]
-    public async Task<KodikAnime> SearchAnime(string query)
+    public async Task<KodikResults> SearchAnime(string query, string? genres = null)
     {
-        return await _animeService.SearchAnime(query);
+        return await _animeService.SearchAnime(query, genres);
     }
 
     [HttpGet("getPopularAnime")]
@@ -67,5 +60,11 @@ public class AnimeController : BaseController
     public async Task<List<AnimePreview>> GetJustReleasedAnime(int limit = 5, int page = 1)
     {
         return await _animeService.GetJustReleasedAnime(limit, page);
+    }
+    
+    [HttpGet("getGenres")]
+    public List<string> GetGenres()
+    {
+        return AnimeService.GetGenres();
     }
 }
