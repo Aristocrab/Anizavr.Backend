@@ -9,5 +9,7 @@ public class UserDto
     public required string Email { get; set; }
     public required string AvatarUrl { get; set; }
 
-    public required List<UserWatchingAnime> LastWatchedAnimes { get; set; }
+    public required List<UserWatchingAnime> CurrentlyWatchingAnime { get; set; }
+    public required List<UserWatchedAnime> WatchedAnime { get; set; }
+    public required List<WishlistAnime> Wishlist { get; set; }
 }
