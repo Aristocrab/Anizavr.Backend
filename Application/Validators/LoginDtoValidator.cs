@@ -7,7 +7,11 @@ public class LoginDtoValidator : AbstractValidator<LoginDto>
 {
     public LoginDtoValidator()
     {
-        RuleFor(x => x.Username).NotEmpty().MinimumLength(6);
-        RuleFor(x => x.Password).NotEmpty().MinimumLength(6);
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .WithMessage("Пустой емейл");
+        RuleFor(x => x.Password)
+            .NotEmpty()
+            .WithMessage("Пустой пароль");
     }
 }
