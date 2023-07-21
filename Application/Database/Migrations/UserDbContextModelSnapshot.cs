@@ -15,7 +15,33 @@ namespace Application.Database.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
+
+            modelBuilder.Entity("Application.Entities.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("AnimeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Comments");
+                });
 
             modelBuilder.Entity("Application.Entities.User", b =>
                 {
@@ -31,7 +57,11 @@ namespace Application.Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -53,10 +83,10 @@ namespace Application.Database.Migrations
                     b.Property<long>("AnimeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("EpisodesTotal")
+                    b.Property<int>("CurrentEpisode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("EpisodesWatched")
+                    b.Property<int>("EpisodesTotal")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PosterUrl")
@@ -93,13 +123,10 @@ namespace Application.Database.Migrations
                     b.Property<long>("AnimeId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CurrentEpisode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("EpisodesTotal")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EpisodesWatched")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("NextEpisode")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PosterUrl")
@@ -109,6 +136,9 @@ namespace Application.Database.Migrations
                     b.Property<string>("Rating")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<float>("SecondsTotal")
+                        .HasColumnType("REAL");
 
                     b.Property<int>("SecondsWatched")
                         .HasColumnType("INTEGER");
@@ -127,6 +157,51 @@ namespace Application.Database.Migrations
                     b.ToTable("UserWatchingAnimeList");
                 });
 
+            modelBuilder.Entity("Application.Entities.WishlistAnime", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("AnimeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EpisodesTotal")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PosterUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Rating")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Wishlist");
+                });
+
+            modelBuilder.Entity("Application.Entities.Comment", b =>
+                {
+                    b.HasOne("Application.Entities.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
             modelBuilder.Entity("Application.Entities.UserWatchedAnime", b =>
                 {
                     b.HasOne("Application.Entities.User", null)
@@ -141,11 +216,20 @@ namespace Application.Database.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("Application.Entities.WishlistAnime", b =>
+                {
+                    b.HasOne("Application.Entities.User", null)
+                        .WithMany("Wishlist")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Application.Entities.User", b =>
                 {
                     b.Navigation("CurrentlyWatchingAnime");
 
                     b.Navigation("WatchedAnime");
+
+                    b.Navigation("Wishlist");
                 });
 #pragma warning restore 612, 618
         }
