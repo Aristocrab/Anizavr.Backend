@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using Application.AnimeSkipApi;
 using Application.Database;
 using Application.KodikApi;
@@ -28,14 +29,14 @@ public static class ConfigureServices
 {
     public static void AddApiServices(this WebApplicationBuilder builder)
     {
-        // Main todo
+        // Main
         builder.Services.AddResponseCaching();
         builder.Services.AddControllers(options =>
         {
             options.CacheProfiles.Add("Default",
                 new CacheProfile
                 {
-                    Duration = 120,
+                    Duration = 86400,
                     Location = ResponseCacheLocation.Any,
                     VaryByQueryKeys = new []{ "*" }
                 });
@@ -44,12 +45,13 @@ public static class ConfigureServices
         // Serilog
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
             .WriteTo.Console()
             .CreateLogger();
         builder.Host.UseSerilog();
         
         // FluentValidation
-        ValidatorOptions.Global.LanguageManager.Enabled = false;
+        ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidatior>();
 
         // Shikimori

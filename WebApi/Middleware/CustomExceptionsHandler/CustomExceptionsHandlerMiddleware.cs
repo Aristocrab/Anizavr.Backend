@@ -37,14 +37,17 @@ public class CustomExceptionsHandlerMiddleware
             ArgumentException or InvalidOperationException or ValidationException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
-        var errorMessage = exception.Message;
         
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int) code;
+        
+        // Use LINQ inner exception
         if (exception is InvalidOperationException invalidOperationException)
         {
             exception = invalidOperationException.InnerException ?? invalidOperationException;
         }
+        var errorMessage = exception.Message;
+        // Show FluentValidation first error
         if (exception is ValidationException validationException)
         {
             errorMessage = validationException.Errors.First().ErrorMessage;
@@ -56,8 +59,9 @@ public class CustomExceptionsHandlerMiddleware
             ErrorMessage = errorMessage
         };
         
-        Log.Error("[{StatusCodeId} {StatusCode}] {ErrorMessage}", (int)error.StatusCode, error.StatusCode, error.ErrorMessage);
-
+        Log.Error("HTTP {RequestMethod} {RequestPath} responded {StatusCode}. {ErrorMessage}",
+            context.Request.Method, context.Request.Path, context.Response.StatusCode, error.ErrorMessage);
+        
         var errorJson = JsonSerializer.Serialize(error);
         return context.Response.WriteAsync(errorJson);
     }
