@@ -7,8 +7,11 @@ namespace Application.KodikApi;
 public interface IKodikApi
 {
     [Get($"/search?token={Constants.KodikKey}&shikimori_id={{shikimoriId}}")]
-    Task<KodikAnime> GetAnime(long shikimoriId);
+    Task<KodikResults> GetAnime(long shikimoriId);
     
     [Get($"/search?token={Constants.KodikKey}&title={{query}}&types=anime-serial,anime&limit=100&with_material_data=true")]
-    Task<KodikAnime> SearchAnime(string query);
+    Task<KodikResults> SearchAnime(string query);
+    
+    [Get($"/search?token={Constants.KodikKey}&title={{query}}&types=anime-serial,anime&limit=100&with_material_data=true&anime_genres={{genres}}")]
+    Task<KodikResults> SearchAnime(string query, string genres);
 }

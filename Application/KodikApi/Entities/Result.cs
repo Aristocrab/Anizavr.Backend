@@ -4,7 +4,7 @@ namespace Application.KodikApi.Entities;
 
 public class Result
 {
-    public required string Shikimori_Id { get; set; }
+    public string? Shikimori_Id { get; set; }
     public required string Type { get; set; }
     public required string Link { get; set; }
     public required string Title { get; set; }
@@ -25,14 +25,17 @@ public class MaterialData
     public required string Title { get; set; }
     
     [JsonProperty("year")]
-    public required int Year { get; set; }
+    public int? Year { get; set; }
 
     [JsonProperty("tagline")]
-    public required string Tagline { get; set; }
+    public string? Tagline { get; set; }
 
     [JsonProperty("description")]
-    public required string Description { get; set; }
+    public string? Description { get; set; }
 
     [JsonProperty("poster_url")]
-    public required string Poster_Url { get; set; }
+    public string? Poster_Url { get; set; }
+    
+    [JsonProperty("shikimori_rating")]
+    public float? Shikimori_rating { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Application.KodikApi.Entities;
 
-public class KodikAnime
+public class KodikResults
 {
     public required string Time { get; set; }
     public required int Total { get; set; }
