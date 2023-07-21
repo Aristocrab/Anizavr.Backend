@@ -2,8 +2,8 @@
 
 public class NotFoundException : Exception
 {
-    public NotFoundException(string parameterName, string parameterValue)
-        : base($"Entity with {parameterName}={parameterValue} was not found")
+    public NotFoundException(string entityName, string parameterName, string parameterValue)
+        : base($"{entityName} с {parameterName}={parameterValue} не сущевствует")
     {
         
     }
