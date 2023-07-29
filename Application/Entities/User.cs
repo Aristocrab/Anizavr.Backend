@@ -12,4 +12,5 @@ public class User
     public required List<UserWatchingAnime> CurrentlyWatchingAnime { get; set; }
     public required List<UserWatchedAnime> WatchedAnime { get; set; }
     public required List<WishlistAnime> Wishlist { get; set; }
+    public required List<TierlistAnime> Tierlist { get; set; }
 }

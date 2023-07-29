@@ -10,4 +10,5 @@ public class UserWatchingAnime {
     public required string Rating { get; set; }
     public required int SecondsWatched { get; set; }
     public required float SecondsTotal { get; set; }
+    public required string Kind { get; set; }
 }
