@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Application.Database.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20230720132840_Initial")]
-    partial class Initial
+    [Migration("20230724154343_WishlistKind")]
+    partial class WishlistKind
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,43 @@ namespace Application.Database.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Application.Entities.TierlistAnime", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("AnimeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EpisodesTotal")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PosterUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Rating")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tierlist");
                 });
 
             modelBuilder.Entity("Application.Entities.User", b =>
@@ -132,6 +169,10 @@ namespace Application.Database.Migrations
                     b.Property<int>("EpisodesTotal")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("PosterUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -172,6 +213,10 @@ namespace Application.Database.Migrations
                     b.Property<int>("EpisodesTotal")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("PosterUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -205,6 +250,13 @@ namespace Application.Database.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Application.Entities.TierlistAnime", b =>
+                {
+                    b.HasOne("Application.Entities.User", null)
+                        .WithMany("Tierlist")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Application.Entities.UserWatchedAnime", b =>
                 {
                     b.HasOne("Application.Entities.User", null)
@@ -229,6 +281,8 @@ namespace Application.Database.Migrations
             modelBuilder.Entity("Application.Entities.User", b =>
                 {
                     b.Navigation("CurrentlyWatchingAnime");
+
+                    b.Navigation("Tierlist");
 
                     b.Navigation("WatchedAnime");
 

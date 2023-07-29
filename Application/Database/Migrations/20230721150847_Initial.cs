@@ -49,6 +49,28 @@ namespace Application.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tierlist",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AnimeId = table.Column<long>(type: "INTEGER", nullable: false),
+                    EpisodesTotal = table.Column<int>(type: "INTEGER", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    PosterUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Rating = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tierlist", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tierlist_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserWatchedAnimeList",
                 columns: table => new
                 {
@@ -125,6 +147,11 @@ namespace Application.Database.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tierlist_UserId",
+                table: "Tierlist",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserWatchedAnimeList_UserId",
                 table: "UserWatchedAnimeList",
                 column: "UserId");
@@ -145,6 +172,9 @@ namespace Application.Database.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Tierlist");
 
             migrationBuilder.DropTable(
                 name: "UserWatchedAnimeList");

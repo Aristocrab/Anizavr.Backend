@@ -12,4 +12,5 @@ public class UserDbContext : DbContext
     public required DbSet<UserWatchingAnime> UserWatchingAnimeList { get; set; }
     public required DbSet<UserWatchedAnime> UserWatchedAnimeList { get; set; }
     public required DbSet<WishlistAnime> Wishlist { get; set; }
+    public required DbSet<TierlistAnime> Tierlist { get; set; }
 }
