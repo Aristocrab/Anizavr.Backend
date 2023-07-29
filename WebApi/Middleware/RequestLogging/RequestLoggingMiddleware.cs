@@ -20,7 +20,7 @@ public class RequestLoggingMiddleware
         sw.Stop();
         var elapsed = sw.Elapsed.TotalMilliseconds;
         
-        Log.Information("HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.000} ms",
+        Log.Information("{RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.000} ms",
             context.Request.Method, context.Request.Path, context.Response.StatusCode, elapsed);
     }
 }
