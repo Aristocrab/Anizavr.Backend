@@ -1,5 +1,6 @@
 using Microsoft.Extensions.FileProviders;
 using WebApi;
+using WebApi.Middleware.CustomExceptionsHandler;
 using WebApi.Middleware.RequestLogging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,11 +22,11 @@ app.UseCors(policyBuilder =>
 });
 
 // Custom middleware
-// app.UseCustomExceptionsHandler(); todo
+app.UseCustomExceptionsHandler();
 app.UseRequestLogging();
 
 // Caching
-// app.UseResponseCaching();
+app.UseResponseCaching();
 
 // Avatars
 app.UseStaticFiles(new StaticFileOptions
