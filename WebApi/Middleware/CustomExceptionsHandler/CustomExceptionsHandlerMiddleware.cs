@@ -52,6 +52,10 @@ public class CustomExceptionsHandlerMiddleware
         {
             errorMessage = validationException.Errors.First().ErrorMessage;
         }
+        if (exception is ArgumentNullException)
+        {
+            errorMessage = "Ошибка валидации";
+        }
 
         var error = new
         {
@@ -59,7 +63,7 @@ public class CustomExceptionsHandlerMiddleware
             ErrorMessage = errorMessage
         };
         
-        Log.Error("HTTP {RequestMethod} {RequestPath} responded {StatusCode}. {ErrorMessage}",
+        Log.Error("{RequestMethod} {RequestPath} responded {StatusCode}. {ErrorMessage}",
             context.Request.Method, context.Request.Path, context.Response.StatusCode, error.ErrorMessage);
         
         var errorJson = JsonSerializer.Serialize(error);
