@@ -9,8 +9,8 @@ public partial class RegisterDtoValidatior : AbstractValidator<RegisterDto>
     public RegisterDtoValidatior()
     {
         RuleFor(x => x.Email)
-            .Must(BeAValidEmail).WithMessage("Некорректный емейл")
-            .NotEmpty().WithMessage("Пустой емейл");
+            .Must(BeAValidEmail).WithMessage("Некорректный имейл")
+            .NotEmpty().WithMessage("Пустой имейл");
         RuleFor(x => x.Username)
             .Must(BeAValidUsername).WithMessage("Никнейм может содержать только английские буквы, цифры и подчёркивание")
             .NotEmpty().WithMessage("Пустой никнейм")

@@ -9,7 +9,7 @@ public class LoginDtoValidator : AbstractValidator<LoginDto>
     {
         RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage("Пустой емейл");
+            .WithMessage("Пустой имейл");
         RuleFor(x => x.Password)
             .NotEmpty()
             .WithMessage("Пустой пароль");
