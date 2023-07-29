@@ -10,7 +10,7 @@ namespace WebApi.Controllers;
 
 [AllowAnonymous]
 [Route("/api")]
-// [ResponseCache(CacheProfileName = "Default")]
+[ResponseCache(CacheProfileName = "Default")]
 public class AnimeController : BaseController
 {
     private readonly AnimeService _animeService;

@@ -57,6 +57,7 @@ public class UserController : BaseController
         return await _userService.GetUser(UserId);
     }
     
+    [AllowAnonymous]
     [HttpGet("getComments/{animeId}")]
     public async Task<List<CommentDto>> GetComments(long animeId)
     {
@@ -96,6 +97,12 @@ public class UserController : BaseController
     public async Task AddComment([FromBody] AddCommentDto addCommentDto)
     {
         await _userService.AddCommentToAnime(UserId, addCommentDto.AnimeId, addCommentDto.Text);
+    }
+    
+    [HttpDelete("deleteComment/{commentId}")]
+    public async Task DeleteComment(Guid commentId)
+    {
+        await _userService.DeleteComment(UserId, commentId);
     }
 
     [HttpPost("addToWatched/{animeId}")]
@@ -138,5 +145,23 @@ public class UserController : BaseController
     public async Task RemoveAnimeFromWishlist(long animeId)
     {
         await _userService.RemoveAnimeFromWishlist(UserId, animeId);
+    }
+    
+    [HttpPost("addToTierlist/{animeId}")]
+    public async Task AddAnimeToTierlist(long animeId)
+    {
+        await _userService.AddAnimeToTierlist(UserId, animeId);
+    }
+    
+    [HttpPut("changeTierlistOrder/{animeId}")]
+    public async Task ChangeTierlistOrder(long animeId, int newPosition)
+    {
+        await _userService.ChangeTierlistOrder(UserId, animeId, newPosition);
+    }
+    
+    [HttpDelete("removeFromTierlist/{animeId}")]
+    public async Task RemoveAnimeFromTierlist(long animeId)
+    {
+        await _userService.RemoveAnimeFromTierlist(UserId, animeId);
     }
 }
