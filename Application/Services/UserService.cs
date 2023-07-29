@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Entities;
 using Application.Exceptions;
+using Application.KodikApi;
 using Application.Shared;
 using FluentValidation;
 using Mapster;
@@ -18,14 +19,18 @@ public class UserService
 {
     private readonly UserDbContext _dbContext;
     private readonly ShikimoriClient _shikimoriClient;
+    private readonly IKodikApi _kodikApi;
     private readonly IValidator<RegisterDto> _registerDtoValidator;
     private readonly IValidator<LoginDto> _loginDtoValidator;
+    
+    private static readonly object Lock = new();
 
-    public UserService(UserDbContext dbContext, ShikimoriClient shikimoriClient,
+    public UserService(UserDbContext dbContext, ShikimoriClient shikimoriClient, IKodikApi kodikApi,
         IValidator<RegisterDto> registerDtoValidator, IValidator<LoginDto> loginDtoValidator)
     {
         _dbContext = dbContext;
         _shikimoriClient = shikimoriClient;
+        _kodikApi = kodikApi;
         _registerDtoValidator = registerDtoValidator;
         _loginDtoValidator = loginDtoValidator;
     }
@@ -64,6 +69,7 @@ public class UserService
             CurrentlyWatchingAnime = new List<UserWatchingAnime>(),
             WatchedAnime = new List<UserWatchedAnime>(),
             Wishlist = new List<WishlistAnime>(),
+            Tierlist = new List<TierlistAnime>(),
             AvatarUrl = avatarUrl
         };
         _dbContext.Users.Add(user);
@@ -145,11 +151,8 @@ public class UserService
 
     public async Task<UserDto> GetUser(Guid userId)
     {
-        var user = await _dbContext.Users
-            .Include(x => x.CurrentlyWatchingAnime)
-            .Include(x => x.WatchedAnime)
-            .Include(x => x.Wishlist)
-            .FirstOrDefaultAsync(x => x.Id == userId);
+        var user = await GetUserById(userId);
+        
         if (user is null)
         {
             throw new NotFoundException("Пользователь", nameof(userId), userId.ToString());
@@ -160,11 +163,7 @@ public class UserService
     
     public async Task<UserDto> GetUser(string username)
     {
-        var user = await _dbContext.Users
-            .Include(x => x.CurrentlyWatchingAnime)
-            .Include(x => x.WatchedAnime)
-            .Include(x => x.Wishlist)
-            .FirstOrDefaultAsync(x => x.Username == username);
+        var user = await GetUserByUsername(username);
         if (user is null)
         {
             throw new NotFoundException("Пользователь", nameof(username), username);
@@ -208,6 +207,32 @@ public class UserService
         _dbContext.Comments.Add(comment);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task DeleteComment(Guid userId, Guid commentId)
+    {
+        var user = _dbContext.Users
+            .Include(x => x.CurrentlyWatchingAnime)
+            .FirstOrDefault(x => x.Id == userId);
+        if (user is null)
+        {
+            throw new NotFoundException("Пользователь", nameof(userId), userId.ToString());
+        }
+
+        var comment = await _dbContext.Comments
+            .FirstOrDefaultAsync(x => x.Id == commentId);
+        if (comment is null)
+        {
+            throw new NotFoundException("Комментарий", nameof(commentId), commentId.ToString());
+        }
+
+        if (comment.Author.Id != userId)
+        {
+            throw new UnauthorizedException(userId, nameof(commentId), commentId.ToString());
+        }
+
+        _dbContext.Comments.Remove(comment);
+        await _dbContext.SaveChangesAsync();
+    }
     
     #endregion
 
@@ -216,7 +241,6 @@ public class UserService
     public async Task AddAnimeToWatchingList(Guid userId, long animeId, int currentEpisode, float secondsTotal)
     {
         var user = await GetUserById(userId);
-        var anime = await GetAnimeById(animeId);
 
         var watchingAnime = user.CurrentlyWatchingAnime.FirstOrDefault(x => x.AnimeId == animeId);
         if (watchingAnime is not null)
@@ -226,8 +250,13 @@ public class UserService
         }
         else
         {
-            var userAnime = CreateUserWatchingAnime(anime, currentEpisode, secondsTotal);
-            user.CurrentlyWatchingAnime.Add(userAnime);
+            lock (Lock)
+            {
+                if(user.CurrentlyWatchingAnime.Any(x => x.AnimeId == animeId)) return;
+                var anime = GetAnimeById(animeId).Result;
+                var userAnime = CreateUserWatchingAnime(anime, currentEpisode, secondsTotal);
+                user.CurrentlyWatchingAnime.Add(userAnime);
+            }
         }
 
         await _dbContext.SaveChangesAsync();
@@ -240,13 +269,16 @@ public class UserService
 
         if (userAnime is null)
         {
-            throw new NotFoundException("Пользователь", nameof(animeId), animeId.ToString());
+            throw new NotFoundException("Аниме", nameof(animeId), animeId.ToString());
         }
 
         if (episodeFinished == userAnime.EpisodesTotal)
         {
             await RemoveAnimeFromWatchingList(userId, animeId);
-            await AddAnimeToWatchedList(userId, animeId);
+            if (user.WatchedAnime.All(x => x.AnimeId != animeId))
+            {
+                await AddAnimeToWatchedList(userId, animeId);
+            }
         }
         else
         {
@@ -280,7 +312,7 @@ public class UserService
             throw new NotFoundException("Аниме", nameof(animeId), animeId.ToString());
         }
 
-        user.CurrentlyWatchingAnime.Remove(watchingAnime);
+        _dbContext.UserWatchingAnimeList.Remove(watchingAnime);
         await _dbContext.SaveChangesAsync();
     }
 
@@ -292,12 +324,15 @@ public class UserService
     {
         var user = await GetUserById(userId);
         var anime = await GetAnimeById(animeId);
-
-        if (user.WatchedAnime.All(x => x.AnimeId != animeId))
+        
+        lock (Lock)
         {
-            var userAnime = CreateUserWatchedAnime(anime, userScore, currentEpisode);
-            user.WatchedAnime.Add(userAnime);
-            await _dbContext.SaveChangesAsync();
+            if (user.WatchedAnime.All(x => x.AnimeId != animeId))
+            {
+                    var userAnime = CreateUserWatchedAnime(anime, userScore, currentEpisode);
+                    user.WatchedAnime.Add(userAnime);
+                    _dbContext.SaveChanges();
+            }
         }
     }
 
@@ -310,11 +345,14 @@ public class UserService
         var user = await GetUserById(userId);
         var anime = await GetAnimeById(animeId);
 
-        if (user.Wishlist.All(x => x.AnimeId != animeId))
+        lock (Lock)
         {
-            var userAnime = CreateWishlistAnime(anime);
-            user.Wishlist.Add(userAnime);
-            await _dbContext.SaveChangesAsync();
+            if (user.Wishlist.All(x => x.AnimeId != animeId))
+            {
+                var userAnime = CreateWishlistAnime(anime);
+                user.Wishlist.Add(userAnime);
+                _dbContext.SaveChanges();
+            }
         }
     }
 
@@ -328,12 +366,68 @@ public class UserService
             throw new NotFoundException("Аниме", nameof(animeId), animeId.ToString());
         }
 
-        user.Wishlist.Remove(wishlistAnime);
+        _dbContext.Wishlist.Remove(wishlistAnime);
         await _dbContext.SaveChangesAsync();
     }
 
     #endregion
 
+    #region Tierlist
+    
+    public async Task AddAnimeToTierlist(Guid userId, long animeId)
+    {
+        var user = await GetUserById(userId);
+        var anime = await GetAnimeById(animeId);
+        var tierlist = user.Tierlist.OrderBy(x => x.Position).Select(x => x.Position).LastOrDefault();
+
+        lock (Lock)
+        {
+            if (user.Tierlist.All(x => x.AnimeId != animeId))
+            {
+                var userAnime = CreateTierlistAnime(anime, tierlist+1);
+                user.Tierlist.Add(userAnime);
+                _dbContext.SaveChanges();
+            }
+        }
+    }
+
+    public async Task ChangeTierlistOrder(Guid userId, long animeId, int newPosition)
+    {
+        var user = await GetUserById(userId);
+        
+        if(user.Tierlist.All(x => x.AnimeId != animeId)) return;
+
+        var anime = user.Tierlist.First(x => x.AnimeId == animeId);
+        var oldPosition = anime.Position;
+        
+        var animeToSwap = user.Tierlist.FirstOrDefault(x => x.Position == newPosition);
+        if (animeToSwap is not null)
+        {
+            animeToSwap.Position = oldPosition;
+        }
+
+        anime.Position = newPosition;
+
+        await _dbContext.SaveChangesAsync();
+    }
+    
+    public async Task RemoveAnimeFromTierlist(Guid userId, long animeId)
+    {
+        var user = await GetUserById(userId);
+        var tierlistAnime = user.Tierlist.FirstOrDefault(x => x.AnimeId == animeId);
+
+        if (tierlistAnime is null)
+        {
+            throw new NotFoundException("Аниме", nameof(animeId), animeId.ToString());
+        }
+
+        _dbContext.Tierlist.Remove(tierlistAnime);
+        
+        await _dbContext.SaveChangesAsync();
+    }
+    
+    #endregion
+    
     #region Helper Methods
 
     private async Task<User> GetUserById(Guid userId)
@@ -342,12 +436,36 @@ public class UserService
             .Include(x => x.CurrentlyWatchingAnime)
             .Include(x => x.WatchedAnime)
             .Include(x => x.Wishlist)
+            .Include(x => x.Tierlist)
+            .AsSingleQuery()
             .FirstOrDefaultAsync(x => x.Id == userId);
 
         if (user is null)
         {
             throw new NotFoundException("Пользователь", nameof(userId), userId.ToString());
         }
+
+        user.Tierlist = user.Tierlist.OrderBy(x => x.Position).ToList();
+
+        return user;
+    }
+    
+    private async Task<User> GetUserByUsername(string username)
+    {
+        var user = await _dbContext.Users
+            .Include(x => x.CurrentlyWatchingAnime)
+            .Include(x => x.WatchedAnime)
+            .Include(x => x.Wishlist)
+            .Include(x => x.Tierlist)
+            .AsSingleQuery()
+            .FirstOrDefaultAsync(x => x.Username == username);
+
+        if (user is null)
+        {
+            throw new NotFoundException("Пользователь", nameof(username), username);
+        }
+
+        user.Tierlist = user.Tierlist.OrderBy(x => x.Position).ToList();
 
         return user;
     }
@@ -356,7 +474,10 @@ public class UserService
     {
         try
         {
-            return await _shikimoriClient.Animes.GetAnime(animeId);
+            var kodikAnime = (await _kodikApi.GetAnime(animeId)).Results.First();
+            var shikimoriAnime = await _shikimoriClient.Animes.GetAnime(animeId);
+            shikimoriAnime.Episodes = kodikAnime.Episodes_Count ?? 0;
+            return shikimoriAnime;
         }
         catch
         {
@@ -364,8 +485,13 @@ public class UserService
         }
     }
 
-    private UserWatchingAnime CreateUserWatchingAnime(AnimeID anime, int currentEpisode, float secondsTotal)
+    private static UserWatchingAnime CreateUserWatchingAnime(AnimeID anime, int currentEpisode, float secondsTotal)
     {
+        if (anime.Id == AnimeHelper.DeathNoteId)
+        {
+            AnimeHelper.FixDeathNotePoster(anime);
+        }
+
         return new UserWatchingAnime
         {
             AnimeId = anime.Id,
@@ -375,12 +501,18 @@ public class UserService
             PosterUrl = anime.Image.Original,
             Rating = anime.Score,
             SecondsWatched = 0,
-            SecondsTotal = secondsTotal
+            SecondsTotal = secondsTotal,
+            Kind = anime.Kind
         };
     }
 
-    private UserWatchedAnime CreateUserWatchedAnime(AnimeID anime, int? userScore, int? currentEpisode)
+    private static UserWatchedAnime CreateUserWatchedAnime(AnimeID anime, int? userScore, int? currentEpisode)
     {
+        if (anime.Id == AnimeHelper.DeathNoteId)
+        {
+            AnimeHelper.FixDeathNotePoster(anime);
+        }
+        
         return new UserWatchedAnime
         {
             AnimeId = anime.Id,
@@ -393,15 +525,39 @@ public class UserService
         };
     }
 
-    private WishlistAnime CreateWishlistAnime(AnimeID anime)
+    private static WishlistAnime CreateWishlistAnime(AnimeID anime)
     {
+        if (anime.Id == AnimeHelper.DeathNoteId)
+        {
+            AnimeHelper.FixDeathNotePoster(anime);
+        }
+        
         return new WishlistAnime
         {
             AnimeId = anime.Id,
             EpisodesTotal = (int)anime.Episodes,
             Title = anime.Russian,
             PosterUrl = anime.Image.Original,
-            Rating = anime.Score
+            Rating = anime.Score,
+            Kind = anime.Kind
+        };
+    }
+    
+    private static TierlistAnime CreateTierlistAnime(AnimeID anime, int position)
+    {
+        if (anime.Id == AnimeHelper.DeathNoteId)
+        {
+            AnimeHelper.FixDeathNotePoster(anime);
+        }
+        
+        return new TierlistAnime
+        {
+            AnimeId = anime.Id,
+            EpisodesTotal = (int)anime.Episodes,
+            Title = anime.Russian,
+            PosterUrl = anime.Image.Original,
+            Rating = anime.Score,
+            Position = position
         };
     }
 

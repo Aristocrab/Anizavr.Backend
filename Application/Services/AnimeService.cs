@@ -1,12 +1,13 @@
 ﻿using Application.AnimeSkipApi;
 using Application.AnimeSkipApi.Entities;
+using Application.Database;
 using Application.Exceptions;
 using Application.KodikApi;
 using Application.KodikApi.Entities;
+using Application.Shared;
 using Application.ShikimoriApi;
 using Mapster;
 using ShikimoriSharp;
-using ShikimoriSharp.AdditionalRequests;
 using ShikimoriSharp.Bases;
 using ShikimoriSharp.Classes;
 using ShikimoriSharp.Enums;
@@ -25,13 +26,16 @@ public class AnimeService
     public AnimeService(ShikimoriClient shikimoriClient, 
         IKodikApi kodikApi, 
         IShikimoriApi shikimoriApi, 
-        AnimeSkipService animeSkipService)
+        AnimeSkipService animeSkipService,
+        UserDbContext dbContext)
     {
         _shikimoriClient = shikimoriClient;
         _kodikApi = kodikApi;
         _shikimoriApi = shikimoriApi;
         _animeSkipService = animeSkipService;
     }
+
+    #region Anime info
 
     public async Task<Anime> GetAnimeById(long id)
     {
@@ -46,38 +50,62 @@ public class AnimeService
         }
         
         var kodikDetails = await _kodikApi.GetAnime(id);
-        // var timestamps = await GetTimestampsById(id); // todo
-        ShowsByExternalId? timestamps = null;
+        
+        List<EpisodeTimestamps>? timestamps = 
+            // await GetTimestamps(id);
+            null;
 
-        // Костыль для Тетради смерти
-        if (id == 1535)
+        if (id == AnimeHelper.DeathNoteId)
         {
-            shikimoriDetails.Image.Original = "/system/animes/original/1535.jpg?1674340297";
+            AnimeHelper.FixDeathNotePoster(shikimoriDetails);
         }
 
-        
         var anime = new Anime
         {
             ShikimoriDetails = shikimoriDetails,
             KodikDetails = kodikDetails,
-            Timestamps = timestamps?.FindShowsByExternalId.FirstOrDefault(),
+            Timestamps = timestamps
         };
         
         return anime;
     }
 
-    private async Task<ShowsByExternalId?> GetTimestampsById(long id)
+    private async Task<List<EpisodeTimestamps>?> GetTimestamps(long animeId)
     {
-        return await _animeSkipService.GetTimestampsById(id);
+        var animeSkipTimestamps = await _animeSkipService.GetTimestampsById(animeId);
+        if (animeSkipTimestamps is null || animeSkipTimestamps.FindShowsByExternalId.Count == 0)
+        {
+            return null;
+        }
+
+        var timestamps = animeSkipTimestamps.FindShowsByExternalId.First();
+        var list = new List<EpisodeTimestamps>();
+
+        for (var i = 0; i < timestamps.Episodes.Count; i++)
+        {
+            var openingStart = timestamps.Episodes[i].Timestamps
+                .FirstOrDefault(x => x.Type.Name is "New Intro" or "Intro");
+            var openingEnd = timestamps.Episodes[i].Timestamps
+                .SkipWhile(x => x.Type.Name is not ("New Intro" or "Intro"))
+                .Skip(1)
+                .FirstOrDefault();
+            var ending = timestamps.Episodes[i].Timestamps
+                .FirstOrDefault(x => x.Type.Name is "New Credits" or "Credits" or "Mixed Credits");
+            
+            var episodeTimestamps = new EpisodeTimestamps
+            {
+                AnimeId = animeId,
+                Episode = i + 1,
+                OpeningStart = openingStart?.At,
+                OpeningEnd = openingEnd?.At,
+                EndingStart = ending?.At
+            };
+            list.Add(episodeTimestamps);
+        }
+
+        return list;
     }
-    
-    public async Task<Franchise> GetFranchise(long id)
-    {
-        var shikimoriDetails = await _shikimoriClient.Animes.GetFranchise(id);
-        
-        return shikimoriDetails;
-    }
-    
+
     public async Task<ShikimoriRelated[]> GetRelated(long id)
     {
         var shikimoriDetails = await _shikimoriClient.Animes.GetRelated(id);
@@ -89,7 +117,7 @@ public class AnimeService
 
     public async Task<List<AnimePreview>> GetSimilarAnime(long id)
     {
-        if (id == 1535)
+        if (id == AnimeHelper.DeathNoteId)
         {
             var similar = new List<AnimePreview>
             {
@@ -291,10 +319,16 @@ public class AnimeService
         else
         {
             var similar = await _shikimoriClient.Animes.GetSimilar(id);
+
+            AnimeHelper.FixDeathNotePoster(similar.FirstOrDefault(x => x.Id == AnimeHelper.DeathNoteId));
             return similar.Adapt<List<AnimePreview>>();
         }
     }
 
+    #endregion
+
+    #region Search 
+    
     public async Task<KodikResults> SearchAnime(string query, string? genres = null)
     {
         KodikResults search;
@@ -308,13 +342,10 @@ public class AnimeService
         }
 
         // Взять по одному переводу с каждого аниме
-        // Сортировка по совпадению текста + приоритет для "[ТВ-*]"
-        // todo: спарсить JSON со всеми аниме и сделать нормальный поиск?
         var distinctResults = search.Results
             .Where(x => x.Shikimori_Id is not null)
             .DistinctBy(x => x.Shikimori_Id)
             .OrderByDescending(x => x.Material_Data?.Shikimori_rating)
-            // .ThenByDescending(x => Fuzz.Ratio(query, x.Title) + (x.Title.Contains('[') ? 100 : 0)) 
             .ToList();
         
         search.Results = distinctResults;
@@ -327,7 +358,16 @@ public class AnimeService
         
         return search;
     }
+    
+    public static List<string> GetGenres()
+    {
+        return ShikimoriGenres.List;
+    }
+    
+    #endregion
 
+    #region Anime lists
+    
     public async Task<List<AnimePreview>> GetPopularAnime(int limit, int page)
     {
         var popularAnime = await _shikimoriClient.Animes.GetAnime(new AnimeRequestSettings
@@ -338,9 +378,7 @@ public class AnimeService
             kind = "tv,movie"
         });
 
-        // Костыль для Тетради смерти
-        var deathNote = popularAnime.FirstOrDefault(x => x.Id == 1535);
-        if (deathNote != null) deathNote.Image.Original = $"/system/animes/original/1535.jpg?1674340297";
+        AnimeHelper.FixDeathNotePoster(popularAnime.FirstOrDefault(x => x.Id == AnimeHelper.DeathNoteId));
 
         return popularAnime.Select(x => x.Adapt<AnimePreview>()).ToList();
     }
@@ -378,9 +416,6 @@ public class AnimeService
 
         return trendingAnime.Select(x => x.Adapt<AnimePreview>()).ToList();
     }
-
-    public static List<string> GetGenres()
-    {
-        return ShikimoriGenres.List;
-    }
+    
+    #endregion
 }
