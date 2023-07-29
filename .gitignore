@@ -477,7 +477,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # Ignore constants
-Application/Shared/Constants.cs
+Anizavr.Backend.Application/Shared/Constants.cs
 
 # Ignore database
 *.db
