@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{A1351E27-810D-4CA1-AE10-F67CBA9E69E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anizavr.Backend.Application", "Anizavr.Backend.Application\Anizavr.Backend.Application.csproj", "{A1351E27-810D-4CA1-AE10-F67CBA9E69E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{EFF34F2D-77E3-45D4-8E67-B9D92009882D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anizavr.Backend.WebApi", "Anizavr.Backend.WebApi\Anizavr.Backend.WebApi.csproj", "{EFF34F2D-77E3-45D4-8E67-B9D92009882D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
