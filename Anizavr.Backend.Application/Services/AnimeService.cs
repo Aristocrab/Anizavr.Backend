@@ -1,6 +1,5 @@
 ﻿using Anizavr.Backend.Application.AnimeSkipApi;
 using Anizavr.Backend.Application.AnimeSkipApi.Entities;
-using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Exceptions;
 using Anizavr.Backend.Application.KodikApi;
 using Anizavr.Backend.Application.KodikApi.Entities;
@@ -26,8 +25,7 @@ public class AnimeService
     public AnimeService(ShikimoriClient shikimoriClient, 
         IKodikApi kodikApi, 
         IShikimoriApi shikimoriApi, 
-        AnimeSkipService animeSkipService,
-        UserDbContext dbContext)
+        AnimeSkipService animeSkipService)
     {
         _shikimoriClient = shikimoriClient;
         _kodikApi = kodikApi;
@@ -49,7 +47,7 @@ public class AnimeService
             throw new NotFoundException("Аниме", nameof(id), id.ToString());
         }
         
-        var kodikDetails = await _kodikApi.GetAnime(id);
+        var kodikDetails = await _kodikApi.GetAnime(id, Constants.KodikKey);
         
         List<EpisodeTimestamps>? timestamps = 
             // await GetTimestamps(id);
@@ -334,7 +332,7 @@ public class AnimeService
         KodikResults search;
         if (genres is null)
         {
-            search = await _kodikApi.SearchAnime(query);
+            search = await _kodikApi.SearchAnime(query, Constants.KodikKey);
         }
         else
         {

@@ -474,7 +474,7 @@ public class UserService
     {
         try
         {
-            var kodikAnime = (await _kodikApi.GetAnime(animeId)).Results.First();
+            var kodikAnime = (await _kodikApi.GetAnime(animeId, Constants.KodikKey)).Results.First();
             var shikimoriAnime = await _shikimoriClient.Animes.GetAnime(animeId);
             shikimoriAnime.Episodes = kodikAnime.Episodes_Count ?? 0;
             return shikimoriAnime;

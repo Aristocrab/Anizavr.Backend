@@ -10,7 +10,7 @@ namespace Anizavr.Backend.WebApi.Controllers;
 
 [AllowAnonymous]
 [Route("/api")]
-[ResponseCache(CacheProfileName = "Default")]
+[ResponseCache(CacheProfileName = "DefaultCacheProfile")]
 public class AnimeController : BaseController
 {
     private readonly AnimeService _animeService;

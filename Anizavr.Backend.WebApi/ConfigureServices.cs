@@ -33,7 +33,7 @@ public static class ConfigureServices
         builder.Services.AddResponseCaching();
         builder.Services.AddControllers(options =>
         {
-            options.CacheProfiles.Add("Default",
+            options.CacheProfiles.Add("DefaultCacheProfile",
                 new CacheProfile
                 {
                     Duration = 86400,
@@ -74,8 +74,9 @@ public static class ConfigureServices
         builder.Services.AddScoped<AnimeSkipService>();
 
         // Database
+        const string connectionString = "Data Source=anizavr.db";
         builder.Services.AddDbContext<UserDbContext>(options =>
-            options.UseSqlite(Constants.SqliteConnectionString));
+            options.UseSqlite(connectionString));
 
         // Services
         builder.Services.AddScoped<AnimeService>();
@@ -117,7 +118,7 @@ public static class ConfigureServices
                             Id = "Bearer"
                         }
                     },
-                    new string[] { }
+                    Array.Empty<string>()
                 }
             });
         });
