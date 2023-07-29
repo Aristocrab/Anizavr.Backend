@@ -6,12 +6,12 @@ namespace Anizavr.Backend.Application.KodikApi;
 
 public interface IKodikApi
 {
-    [Get($"/search?token={Constants.KodikKey}&shikimori_id={{shikimoriId}}")]
-    Task<KodikResults> GetAnime(long shikimoriId);
+    [Get("/search?token={token}&shikimori_id={shikimoriId}&")]
+    Task<KodikResults> GetAnime(long shikimoriId, string token = Constants.KodikKey);
     
-    [Get($"/search?token={Constants.KodikKey}&title={{query}}&types=anime-serial,anime&limit=100&with_material_data=true")]
-    Task<KodikResults> SearchAnime(string query);
+    [Get("/search?token={token}&title={query}&types=anime-serial,anime&limit=100&with_material_data=true")]
+    Task<KodikResults> SearchAnime(string query, string token = Constants.KodikKey);
     
-    [Get($"/search?token={Constants.KodikKey}&title={{query}}&types=anime-serial,anime&limit=100&with_material_data=true&anime_genres={{genres}}")]
-    Task<KodikResults> SearchAnime(string query, string genres);
+    [Get("/search?token={token}&title={query}&types=anime-serial,anime&limit=100&with_material_data=true&anime_genres={genres}")]
+    Task<KodikResults> SearchAnime(string query, string genres, string token = Constants.KodikKey);
 }
