@@ -36,10 +36,15 @@ public static class ConfigureServices
             options.CacheProfiles.Add("Default",
                 new CacheProfile
                 {
+                    // Duration = 86400, todo
                     Duration = 86400,
                     Location = ResponseCacheLocation.Any,
                     VaryByQueryKeys = new []{ "*" }
                 });
+        });
+        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true; // todo ???
         });
         
         // Serilog
