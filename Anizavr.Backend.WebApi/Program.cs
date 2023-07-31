@@ -29,11 +29,11 @@ app.UseRequestLogging();
 app.UseResponseCaching();
 
 // Avatars
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images/Avatars")),
-    RequestPath = new PathString("/avatars")
-});
+// app.UseStaticFiles(new StaticFileOptions
+// {
+//     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images/Avatars")),
+//     RequestPath = new PathString("/avatars")
+// });
 
 // Api
 app.MapGet("/", ctx =>
