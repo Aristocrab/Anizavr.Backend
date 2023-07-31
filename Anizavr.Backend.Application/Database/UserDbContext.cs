@@ -3,9 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Anizavr.Backend.Application.Database;
 
-public class UserDbContext : DbContext
+public sealed class UserDbContext : DbContext
 {
-    public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
+    public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
+    {
+        Database.EnsureCreated();
+    }
     
     public required DbSet<User> Users { get; set; }
     public required DbSet<Comment> Comments { get; set; }
