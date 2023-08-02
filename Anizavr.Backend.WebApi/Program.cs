@@ -1,4 +1,3 @@
-using Microsoft.Extensions.FileProviders;
 using Anizavr.Backend.WebApi;
 using Anizavr.Backend.WebApi.Middleware.CustomExceptionsHandler;
 using Anizavr.Backend.WebApi.Middleware.RequestLogging;
@@ -36,11 +35,8 @@ app.UseResponseCaching();
 // });
 
 // Api
-app.MapGet("/", ctx =>
-{
-    ctx.Response.Redirect("/swagger/index.html");
-    return Task.CompletedTask;
-});
+app.MapGet("/", () => "Anizavr");
+app.MapHealthChecks("/health");
 app.MapControllers();
 
 // Swagger

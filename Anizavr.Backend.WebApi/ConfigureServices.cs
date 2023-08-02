@@ -31,6 +31,7 @@ public static class ConfigureServices
     {
         // Main
         builder.Services.AddResponseCaching();
+        builder.Services.AddHealthChecks();
         builder.Services.AddControllers(options =>
         {
             options.CacheProfiles.Add("DefaultCacheProfile",
