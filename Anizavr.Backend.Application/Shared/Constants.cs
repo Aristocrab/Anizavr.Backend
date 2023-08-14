@@ -13,7 +13,9 @@ public class Constants
     public static readonly string AnimeSkipKey = GetEnvironmentVariable("ANIZAVR_AnimeSkipKey");
     
     public static readonly string KodikKey = GetEnvironmentVariable("ANIZAVR_KodikKey");
-    
+    public const string DatabasePath = "../Database/";
+    public const string ConnectionString = $"Data Source={DatabasePath}anizavr.db";
+
     private static string GetEnvironmentVariable(string name)
     {
         var value = Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.User)
