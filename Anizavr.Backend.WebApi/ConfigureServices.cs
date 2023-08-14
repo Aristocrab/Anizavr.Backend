@@ -75,9 +75,9 @@ public static class ConfigureServices
         builder.Services.AddScoped<AnimeSkipService>();
 
         // Database
-        const string connectionString = "Data Source=anizavr.db";
+        Directory.CreateDirectory(Constants.DatabasePath);
         builder.Services.AddDbContext<UserDbContext>(options =>
-            options.UseSqlite(connectionString));
+            options.UseSqlite(Constants.ConnectionString));
 
         // Services
         builder.Services.AddScoped<AnimeService>();
