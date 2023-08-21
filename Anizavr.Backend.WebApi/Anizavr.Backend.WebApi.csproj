@@ -24,10 +24,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Images\Avatars" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Anizavr.Backend.Application\Anizavr.Backend.Application.csproj" />
     </ItemGroup>
 
