@@ -1,6 +1,4 @@
-﻿using Anizavr.Backend.Application.AnimeSkipApi;
-using Anizavr.Backend.Application.AnimeSkipApi.Entities;
-using Anizavr.Backend.Application.Exceptions;
+﻿using Anizavr.Backend.Application.Exceptions;
 using Anizavr.Backend.Application.KodikApi;
 using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.Shared;
@@ -20,17 +18,14 @@ public class AnimeService
     private readonly ShikimoriClient _shikimoriClient;
     private readonly IKodikApi _kodikApi;
     private readonly IShikimoriApi _shikimoriApi;
-    private readonly AnimeSkipService _animeSkipService;
 
     public AnimeService(ShikimoriClient shikimoriClient, 
         IKodikApi kodikApi, 
-        IShikimoriApi shikimoriApi, 
-        AnimeSkipService animeSkipService)
+        IShikimoriApi shikimoriApi)
     {
         _shikimoriClient = shikimoriClient;
         _kodikApi = kodikApi;
         _shikimoriApi = shikimoriApi;
-        _animeSkipService = animeSkipService;
     }
 
     #region Anime info
@@ -48,11 +43,6 @@ public class AnimeService
         }
         
         var kodikDetails = await _kodikApi.GetAnime(id, Constants.KodikKey);
-        
-        List<EpisodeTimestamps>? timestamps = 
-            // await GetTimestamps(id);
-            null;
-
         if (id == AnimeHelper.DeathNoteId)
         {
             AnimeHelper.FixDeathNotePoster(shikimoriDetails);
@@ -62,46 +52,10 @@ public class AnimeService
         {
             ShikimoriDetails = shikimoriDetails,
             KodikDetails = kodikDetails,
-            Timestamps = timestamps
+            Timestamps = null
         };
         
         return anime;
-    }
-
-    private async Task<List<EpisodeTimestamps>?> GetTimestamps(long animeId)
-    {
-        var animeSkipTimestamps = await _animeSkipService.GetTimestampsById(animeId);
-        if (animeSkipTimestamps is null || animeSkipTimestamps.FindShowsByExternalId.Count == 0)
-        {
-            return null;
-        }
-
-        var timestamps = animeSkipTimestamps.FindShowsByExternalId.First();
-        var list = new List<EpisodeTimestamps>();
-
-        for (var i = 0; i < timestamps.Episodes.Count; i++)
-        {
-            var openingStart = timestamps.Episodes[i].Timestamps
-                .FirstOrDefault(x => x.Type.Name is "New Intro" or "Intro");
-            var openingEnd = timestamps.Episodes[i].Timestamps
-                .SkipWhile(x => x.Type.Name is not ("New Intro" or "Intro"))
-                .Skip(1)
-                .FirstOrDefault();
-            var ending = timestamps.Episodes[i].Timestamps
-                .FirstOrDefault(x => x.Type.Name is "New Credits" or "Credits" or "Mixed Credits");
-            
-            var episodeTimestamps = new EpisodeTimestamps
-            {
-                AnimeId = animeId,
-                Episode = i + 1,
-                OpeningStart = openingStart?.At,
-                OpeningEnd = openingEnd?.At,
-                EndingStart = ending?.At
-            };
-            list.Add(episodeTimestamps);
-        }
-
-        return list;
     }
 
     public async Task<ShikimoriRelated[]> GetRelated(long id)
