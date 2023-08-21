@@ -87,11 +87,11 @@ public class UserController : BaseController
         return await _userService.GetUsersLeaderbord();
     }
     
-    [HttpPost("changeAvatar")]
-    public async Task<string> ChangeAvatar(IFormFile avatar)
-    {
-        return await _userService.ChangeUserAvatar(UserId, avatar);
-    }
+    // [HttpPost("changeAvatar")]
+    // public async Task<string> ChangeAvatar(IFormFile avatar)
+    // {
+    //     return await _userService.ChangeUserAvatar(UserId, avatar);
+    // }
     
     [HttpPost("addComment")]
     public async Task AddComment([FromBody] AddCommentDto addCommentDto)
