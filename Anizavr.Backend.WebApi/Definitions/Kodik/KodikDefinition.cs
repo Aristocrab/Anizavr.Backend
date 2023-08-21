@@ -4,7 +4,7 @@ using Refit;
 
 namespace Anizavr.Backend.WebApi.Definitions.Kodik;
 
-public class KodikDefinition: AppDefinition
+public class KodikDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

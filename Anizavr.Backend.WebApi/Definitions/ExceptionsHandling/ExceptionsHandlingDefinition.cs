@@ -7,7 +7,7 @@ using Serilog;
 
 namespace Anizavr.Backend.WebApi.Definitions.ExceptionsHandling;
 
-public class ExceptionsHandlingDefinition: AppDefinition
+public class ExceptionsHandlingDefinition : AppDefinition
 {
     public override int OrderIndex => -1;
 

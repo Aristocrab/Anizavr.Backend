@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Anizavr.Backend.WebApi.Definitions.Database;
 
-public class DatabaseDefinition: AppDefinition
+public class DatabaseDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

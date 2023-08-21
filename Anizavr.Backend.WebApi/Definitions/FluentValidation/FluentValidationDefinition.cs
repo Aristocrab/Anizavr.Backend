@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Anizavr.Backend.WebApi.Definitions.FluentValidation;
 
-public class FluentValidationDefinition: AppDefinition
+public class FluentValidationDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

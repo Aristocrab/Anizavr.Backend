@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Anizavr.Backend.WebApi.Definitions.Swagger;
 
-public class SwaggerDefinition: AppDefinition
+public class SwaggerDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

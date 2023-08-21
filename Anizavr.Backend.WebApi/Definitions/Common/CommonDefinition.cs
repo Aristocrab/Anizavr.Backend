@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Anizavr.Backend.WebApi.Definitions.Common;
 
-public class CommonDefinition: AppDefinition
+public class CommonDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

@@ -4,7 +4,7 @@ using Serilog;
 
 namespace Anizavr.Backend.WebApi.Definitions.RequestLogging;
 
-public class RequestLoggingDefinition: AppDefinition
+public class RequestLoggingDefinition : AppDefinition
 {
     public override void ConfigureApplication(WebApplication app)
     {

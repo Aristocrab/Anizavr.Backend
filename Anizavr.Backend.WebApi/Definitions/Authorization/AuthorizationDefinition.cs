@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Anizavr.Backend.WebApi.Definitions.Authorization;
 
-public class AuthorizationDefinition: AppDefinition
+public class AuthorizationDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

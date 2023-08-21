@@ -8,7 +8,7 @@ using ShikimoriSharp.Bases;
 
 namespace Anizavr.Backend.WebApi.Definitions.Shikimori;
 
-public class ShikimoriDefinition: AppDefinition
+public class ShikimoriDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
