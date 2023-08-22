@@ -1,12 +1,12 @@
 ﻿using System.Globalization;
 using Anizavr.Backend.Application.Validators;
-using Calabonga.AspNetCore.AppDefinitions;
+using Aristocrab.AspNetCore.AppModules;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Anizavr.Backend.WebApi.Definitions.FluentValidation;
+namespace Anizavr.Backend.WebApi.Modules.FluentValidation;
 
-public class FluentValidationDefinition : AppDefinition
+public class FluentValidationModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using Anizavr.Backend.Application.Shared;
-using Calabonga.AspNetCore.AppDefinitions;
+using Aristocrab.AspNetCore.AppModules;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Anizavr.Backend.WebApi.Definitions.Authorization;
+namespace Anizavr.Backend.WebApi.Modules.Authorization;
 
-public class AuthorizationDefinition : AppDefinition
+public class AuthorizationModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

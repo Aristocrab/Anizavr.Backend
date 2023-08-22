@@ -1,9 +1,9 @@
-﻿using Calabonga.AspNetCore.AppDefinitions;
+﻿using Aristocrab.AspNetCore.AppModules;
 using Microsoft.OpenApi.Models;
 
-namespace Anizavr.Backend.WebApi.Definitions.Swagger;
+namespace Anizavr.Backend.WebApi.Modules.Swagger;
 
-public class SwaggerDefinition : AppDefinition
+public class SwaggerModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

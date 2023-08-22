@@ -1,9 +1,9 @@
-using Calabonga.AspNetCore.AppDefinitions;
+using Aristocrab.AspNetCore.AppModules;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddDefinitions(typeof(Program));
+builder.AddModules();
 
 var app = builder.Build();
-app.UseDefinitions();
+app.UseModules();
 
 app.Run();

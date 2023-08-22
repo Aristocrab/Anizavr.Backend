@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
-using Calabonga.AspNetCore.AppDefinitions;
+using Aristocrab.AspNetCore.AppModules;
 using Serilog;
 
-namespace Anizavr.Backend.WebApi.Definitions.RequestLogging;
+namespace Anizavr.Backend.WebApi.Modules.RequestLogging;
 
-public class RequestLoggingDefinition : AppDefinition
+public class RequestLoggingModule : AppModule
 {
     public override void ConfigureApplication(WebApplication app)
     {

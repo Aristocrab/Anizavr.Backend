@@ -1,10 +1,10 @@
 ﻿using Anizavr.Backend.Application.Services;
-using Calabonga.AspNetCore.AppDefinitions;
+using Aristocrab.AspNetCore.AppModules;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Anizavr.Backend.WebApi.Definitions.Common;
+namespace Anizavr.Backend.WebApi.Modules.Common;
 
-public class CommonDefinition : AppDefinition
+public class CommonModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
@@ -21,8 +21,8 @@ public class CommonDefinition : AppDefinition
                 });
         });
 
-        builder.Services.AddScoped<AnimeService>();
-        builder.Services.AddScoped<UserService>();
+        builder.Services.AddScoped<IAnimeService, AnimeService>();
+        builder.Services.AddScoped<IUserService, UserService>();
     }
 
     public override void ConfigureApplication(WebApplication app)

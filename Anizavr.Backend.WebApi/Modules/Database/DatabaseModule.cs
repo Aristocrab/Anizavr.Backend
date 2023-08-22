@@ -1,11 +1,11 @@
 ﻿using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Shared;
-using Calabonga.AspNetCore.AppDefinitions;
+using Aristocrab.AspNetCore.AppModules;
 using Microsoft.EntityFrameworkCore;
 
-namespace Anizavr.Backend.WebApi.Definitions.Database;
+namespace Anizavr.Backend.WebApi.Modules.Database;
 
-public class DatabaseDefinition : AppDefinition
+public class DatabaseModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {

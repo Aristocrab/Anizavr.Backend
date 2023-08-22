@@ -1,13 +1,13 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Anizavr.Backend.Application.Exceptions;
-using Calabonga.AspNetCore.AppDefinitions;
+using Aristocrab.AspNetCore.AppModules;
 using FluentValidation;
 using Serilog;
 
-namespace Anizavr.Backend.WebApi.Definitions.ExceptionsHandling;
+namespace Anizavr.Backend.WebApi.Modules.ExceptionsHandling;
 
-public class ExceptionsHandlingDefinition : AppDefinition
+public class ExceptionsHandlingModule : AppModule
 {
     public override int OrderIndex => -1;
 

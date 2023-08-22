@@ -1,10 +1,10 @@
 ﻿using Anizavr.Backend.Application.KodikApi;
-using Calabonga.AspNetCore.AppDefinitions;
+using Aristocrab.AspNetCore.AppModules;
 using Refit;
 
-namespace Anizavr.Backend.WebApi.Definitions.Kodik;
+namespace Anizavr.Backend.WebApi.Modules.Kodik;
 
-public class KodikDefinition : AppDefinition
+public class KodikModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
