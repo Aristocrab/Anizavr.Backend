@@ -1,4 +1,4 @@
-﻿using Aristocrab.AspNetCore.AppModules;
+﻿using Anizavr.Backend.WebApi.Modules.Shared;
 using Microsoft.OpenApi.Models;
 
 namespace Anizavr.Backend.WebApi.Modules.Swagger;

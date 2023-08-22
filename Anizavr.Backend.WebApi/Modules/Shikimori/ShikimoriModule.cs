@@ -1,6 +1,6 @@
 ﻿using Anizavr.Backend.Application.Shared;
 using Anizavr.Backend.Application.ShikimoriApi;
-using Aristocrab.AspNetCore.AppModules;
+using Anizavr.Backend.WebApi.Modules.Shared;
 using NSubstitute;
 using Refit;
 using ShikimoriSharp;

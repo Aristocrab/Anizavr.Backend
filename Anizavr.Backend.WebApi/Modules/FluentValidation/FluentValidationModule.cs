@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Anizavr.Backend.Application.Validators;
-using Aristocrab.AspNetCore.AppModules;
+using Anizavr.Backend.WebApi.Modules.Shared;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 

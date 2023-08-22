@@ -9,7 +9,6 @@
   </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Calabonga.AspNetCore.AppDefinitions" Version="2.2.0" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
       <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="6.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
@@ -28,7 +27,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Anizavr.Backend.Application\Anizavr.Backend.Application.csproj" />
-      <ProjectReference Include="E:\Folders\Desktop\Calabonga.AspNetCore.AppDefinitions-main\src\Calabonga.AspNetCore.AppDefinitions\Calabonga.AspNetCore.AppDefinitions.csproj" />
     </ItemGroup>
 
 </Project>

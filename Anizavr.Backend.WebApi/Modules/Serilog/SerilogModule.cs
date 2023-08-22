@@ -1,4 +1,4 @@
-﻿using Aristocrab.AspNetCore.AppModules;
+﻿using Anizavr.Backend.WebApi.Modules.Shared;
 using Serilog;
 using Serilog.Events;
 

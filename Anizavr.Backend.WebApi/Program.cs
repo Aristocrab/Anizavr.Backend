@@ -1,4 +1,4 @@
-using Aristocrab.AspNetCore.AppModules;
+using Anizavr.Backend.WebApi.Modules.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddModules();

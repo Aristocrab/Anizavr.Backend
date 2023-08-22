@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Anizavr.Backend.Application.Shared;
-using Aristocrab.AspNetCore.AppModules;
+using Anizavr.Backend.WebApi.Modules.Shared;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Anizavr.Backend.WebApi.Modules.Authorization;

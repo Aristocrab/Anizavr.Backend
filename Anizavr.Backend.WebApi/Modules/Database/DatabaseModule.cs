@@ -1,6 +1,6 @@
 ﻿using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Shared;
-using Aristocrab.AspNetCore.AppModules;
+using Anizavr.Backend.WebApi.Modules.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace Anizavr.Backend.WebApi.Modules.Database;
