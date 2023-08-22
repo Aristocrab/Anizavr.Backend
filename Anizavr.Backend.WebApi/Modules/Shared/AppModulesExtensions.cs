@@ -26,15 +26,15 @@ public static class AppModulesExtensions
 
     public static void AddModules(this WebApplicationBuilder builder, params Assembly[] assemblies)
     {
-        var definitionsCollection = builder.Services.BuildServiceProvider().GetService<AppModulesCollection>() 
+        var modulesCollection = builder.Services.BuildServiceProvider().GetService<AppModulesCollection>() 
                                     ?? new AppModulesCollection();
 
         foreach (var assembly in assemblies)
         {
-            var appDefinitions = assembly.GetTypes()
+            var modules = assembly.GetTypes()
                 .Where(AppModulePredicate);
 
-            var instances = appDefinitions.Select(Activator.CreateInstance)
+            var instances = modules.Select(Activator.CreateInstance)
                 .Cast<IAppModule>()
                 .ToList();
         
@@ -45,13 +45,13 @@ public static class AppModulesExtensions
                     instance.ConfigureServices(builder);
                 }
                 
-                definitionsCollection.AppDefinitions.Add(instance);
+                modulesCollection.AppModules.Add(instance);
             }
 
             var logger = builder.Services
                 .BuildServiceProvider()
                 .GetRequiredService<ILogger<AppModule>>();
-            logger.LogDebug("[{Assembly}] AppModules found: {Count}", assembly.GetName().Name, definitionsCollection.AppDefinitions.Count);
+            logger.LogDebug("[{Assembly}] AppModules found: {Count}", assembly.GetName().Name, modulesCollection.AppModules.Count);
 
             foreach (var instance in instances.OrderBy(x => x.GetType().Name))
             {
@@ -59,7 +59,7 @@ public static class AppModulesExtensions
             }
         }
 
-        builder.Services.AddSingleton(definitionsCollection);
+        builder.Services.AddSingleton(modulesCollection);
     }
 
     #endregion
@@ -68,11 +68,11 @@ public static class AppModulesExtensions
 
     public static void UseModules(this WebApplication app)
     {
-        var definitionsCollection = app.Services.GetRequiredService<AppModulesCollection>();
+        var modulesCollection = app.Services.GetRequiredService<AppModulesCollection>();
 
-        foreach (var appDefinition in definitionsCollection.AppDefinitions)
+        foreach (var module in modulesCollection.AppModules)
         {
-            appDefinition.ConfigureApplication(app);
+            module.ConfigureApplication(app);
         }
     }
     
