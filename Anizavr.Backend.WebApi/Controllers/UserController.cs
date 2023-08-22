@@ -15,9 +15,9 @@ namespace Anizavr.Backend.WebApi.Controllers;
 [Route("/api/users")]
 public class UserController : BaseController
 {
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public UserController(UserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }
