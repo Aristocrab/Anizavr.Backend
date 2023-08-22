@@ -13,13 +13,13 @@ using Anime = Anizavr.Backend.Application.Entities.Anime;
 
 namespace Anizavr.Backend.Application.Services;
 
-public class AnimeService
+public class AnimeService : IAnimeService
 {
-    private readonly ShikimoriClient _shikimoriClient;
+    private readonly IShikimoriClient _shikimoriClient;
     private readonly IKodikApi _kodikApi;
     private readonly IShikimoriApi _shikimoriApi;
 
-    public AnimeService(ShikimoriClient shikimoriClient, 
+    public AnimeService(IShikimoriClient shikimoriClient, 
         IKodikApi kodikApi, 
         IShikimoriApi shikimoriApi)
     {
@@ -56,6 +56,21 @@ public class AnimeService
         };
         
         return anime;
+    }
+    
+    public async Task<AnimeID> GetShikimoriAnimeById(long id)
+    {
+        AnimeID shikimoriDetails;
+        try
+        {
+            shikimoriDetails = await _shikimoriClient.Animes.GetAnime(id);
+        }
+        catch
+        {
+            throw new NotFoundException("Аниме", nameof(id), id.ToString());
+        }
+        
+        return shikimoriDetails;
     }
 
     public async Task<ShikimoriRelated[]> GetRelated(long id)
@@ -311,7 +326,7 @@ public class AnimeService
         return search;
     }
     
-    public static List<string> GetGenres()
+    public List<string> GetGenresList()
     {
         return ShikimoriGenres.List;
     }

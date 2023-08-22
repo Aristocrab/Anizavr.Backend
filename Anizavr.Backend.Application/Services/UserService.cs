@@ -2,35 +2,31 @@
 using Anizavr.Backend.Application.Dtos;
 using Anizavr.Backend.Application.Entities;
 using Anizavr.Backend.Application.Exceptions;
-using Anizavr.Backend.Application.KodikApi;
 using Anizavr.Backend.Application.Shared;
 using FluentValidation;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ShikimoriSharp;
 using ShikimoriSharp.Classes;
 using Comment = Anizavr.Backend.Application.Entities.Comment;
 using User = Anizavr.Backend.Application.Entities.User;
 
 namespace Anizavr.Backend.Application.Services;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly UserDbContext _dbContext;
-    private readonly ShikimoriClient _shikimoriClient;
-    private readonly IKodikApi _kodikApi;
+    private readonly IAnimeService _animeService;
     private readonly IValidator<RegisterDto> _registerDtoValidator;
     private readonly IValidator<LoginDto> _loginDtoValidator;
     
     private static readonly object Lock = new();
 
-    public UserService(UserDbContext dbContext, ShikimoriClient shikimoriClient, IKodikApi kodikApi,
+    public UserService(UserDbContext dbContext, IAnimeService animeService,
         IValidator<RegisterDto> registerDtoValidator, IValidator<LoginDto> loginDtoValidator)
     {
         _dbContext = dbContext;
-        _shikimoriClient = shikimoriClient;
-        _kodikApi = kodikApi;
+        _animeService = animeService;
         _registerDtoValidator = registerDtoValidator;
         _loginDtoValidator = loginDtoValidator;
     }
@@ -253,7 +249,7 @@ public class UserService
             lock (Lock)
             {
                 if(user.CurrentlyWatchingAnime.Any(x => x.AnimeId == animeId)) return;
-                var anime = GetAnimeById(animeId).Result;
+                var anime = _animeService.GetShikimoriAnimeById(animeId).Result;
                 var userAnime = CreateUserWatchingAnime(anime, currentEpisode, secondsTotal);
                 user.CurrentlyWatchingAnime.Add(userAnime);
             }
@@ -323,7 +319,7 @@ public class UserService
     public async Task AddAnimeToWatchedList(Guid userId, long animeId, int? userScore = null, int? currentEpisode = null)
     {
         var user = await GetUserById(userId);
-        var anime = await GetAnimeById(animeId);
+        var anime = await _animeService.GetShikimoriAnimeById(animeId);
         
         lock (Lock)
         {
@@ -343,7 +339,7 @@ public class UserService
     public async Task AddAnimeToWishlist(Guid userId, long animeId)
     {
         var user = await GetUserById(userId);
-        var anime = await GetAnimeById(animeId);
+        var anime = await _animeService.GetShikimoriAnimeById(animeId);
 
         lock (Lock)
         {
@@ -377,7 +373,7 @@ public class UserService
     public async Task AddAnimeToTierlist(Guid userId, long animeId)
     {
         var user = await GetUserById(userId);
-        var anime = await GetAnimeById(animeId);
+        var anime = await _animeService.GetShikimoriAnimeById(animeId);
         var tierlist = user.Tierlist.OrderBy(x => x.Position).Select(x => x.Position).LastOrDefault();
 
         lock (Lock)
@@ -468,21 +464,6 @@ public class UserService
         user.Tierlist = user.Tierlist.OrderBy(x => x.Position).ToList();
 
         return user;
-    }
-
-    private async Task<AnimeID> GetAnimeById(long animeId)
-    {
-        try
-        {
-            var kodikAnime = (await _kodikApi.GetAnime(animeId, Constants.KodikKey)).Results.First();
-            var shikimoriAnime = await _shikimoriClient.Animes.GetAnime(animeId);
-            shikimoriAnime.Episodes = kodikAnime.Episodes_Count ?? 0;
-            return shikimoriAnime;
-        }
-        catch
-        {
-            throw new NotFoundException("Аниме", nameof(animeId), animeId.ToString());
-        }
     }
 
     private static UserWatchingAnime CreateUserWatchingAnime(AnimeID anime, int currentEpisode, float secondsTotal)
