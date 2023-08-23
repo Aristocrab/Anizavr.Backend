@@ -20,7 +20,7 @@ public static class AppModulesExtensions
     }
 
     private static Func<Type, bool> AppModulesPredicate => 
-        type => typeof(AppModule).IsAssignableFrom(type) && type is { IsAbstract: false, IsInterface: false };
+        type => typeof(AppModule).IsAssignableFrom(type) && type is { IsAbstract: false };
 
     public static void AddModules(this WebApplicationBuilder builder, params Assembly[] assemblies)
     {
