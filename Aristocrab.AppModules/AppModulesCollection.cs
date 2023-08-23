@@ -1,4 +1,4 @@
-namespace Anizavr.Backend.WebApi.Modules.Shared;
+namespace Aristocrab.AppModules;
 
 public class AppModulesCollection
 {

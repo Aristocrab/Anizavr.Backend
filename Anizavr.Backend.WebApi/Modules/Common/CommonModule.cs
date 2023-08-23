@@ -1,5 +1,5 @@
-﻿using Anizavr.Backend.Application.Services;
-using Anizavr.Backend.WebApi.Modules.Shared;
+﻿using Aristocrab.AppModules;
+using Anizavr.Backend.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Anizavr.Backend.WebApi.Modules.Common;

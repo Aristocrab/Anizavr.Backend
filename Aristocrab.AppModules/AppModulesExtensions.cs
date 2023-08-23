@@ -1,6 +1,9 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-namespace Anizavr.Backend.WebApi.Modules.Shared;
+namespace Aristocrab.AppModules;
 
 public static class AppModulesExtensions
 {
@@ -16,25 +19,22 @@ public static class AppModulesExtensions
         AddModules(builder, types.Select(x => x.Assembly).ToArray());
     }
 
-    private static Func<Type, bool> AppModulePredicate =>
-        x => typeof(AppModule).IsAssignableFrom(x)
-             && x is
-             {
-                 IsAbstract: false,
-                 IsInterface: false
-             };
+    private static Func<Type, bool> AppModulePredicate => 
+        type => typeof(AppModule).IsAssignableFrom(type) && type is { IsAbstract: false, IsInterface: false };
 
     public static void AddModules(this WebApplicationBuilder builder, params Assembly[] assemblies)
     {
         var modulesCollection = builder.Services.BuildServiceProvider().GetService<AppModulesCollection>() 
                                     ?? new AppModulesCollection();
+        ILogger<AppModule>? logger = null;
 
         foreach (var assembly in assemblies)
         {
             var modules = assembly.GetTypes()
                 .Where(AppModulePredicate);
 
-            var instances = modules.Select(Activator.CreateInstance)
+            var instances = modules
+                .Select(Activator.CreateInstance)
                 .Cast<IAppModule>()
                 .ToList();
         
@@ -48,7 +48,7 @@ public static class AppModulesExtensions
                 modulesCollection.AppModules.Add(instance);
             }
 
-            var logger = builder.Services
+            logger ??= builder.Services
                 .BuildServiceProvider()
                 .GetRequiredService<ILogger<AppModule>>();
             logger.LogDebug("[{Assembly}] AppModules found: {Count}", assembly.GetName().Name, modulesCollection.AppModules.Count);

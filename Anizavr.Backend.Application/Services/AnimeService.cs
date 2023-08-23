@@ -4,7 +4,6 @@ using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.Shared;
 using Anizavr.Backend.Application.ShikimoriApi;
 using Mapster;
-using ShikimoriSharp;
 using ShikimoriSharp.Bases;
 using ShikimoriSharp.Classes;
 using ShikimoriSharp.Enums;

@@ -1,4 +1,6 @@
-﻿namespace Anizavr.Backend.WebApi.Modules.Shared;
+﻿using Microsoft.AspNetCore.Builder;
+
+namespace Aristocrab.AppModules;
 
 public interface IAppModule
 {

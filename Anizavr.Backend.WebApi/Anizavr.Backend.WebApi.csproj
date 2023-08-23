@@ -26,7 +26,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Aristocrab.AppModules\Aristocrab.AppModules.csproj" />
       <ProjectReference Include="..\Anizavr.Backend.Application\Anizavr.Backend.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Modules\Shared\" />
     </ItemGroup>
 
 </Project>

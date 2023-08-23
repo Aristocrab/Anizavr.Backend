@@ -1,5 +1,5 @@
-﻿using Anizavr.Backend.Application.KodikApi;
-using Anizavr.Backend.WebApi.Modules.Shared;
+﻿using Aristocrab.AppModules;
+using Anizavr.Backend.Application.KodikApi;
 using Refit;
 
 namespace Anizavr.Backend.WebApi.Modules.Kodik;

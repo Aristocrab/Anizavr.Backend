@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Anizavr.Backend.WebApi.Modules.Shared;
+using Aristocrab.AppModules;
 using Serilog;
 
 namespace Anizavr.Backend.WebApi.Modules.RequestLogging;

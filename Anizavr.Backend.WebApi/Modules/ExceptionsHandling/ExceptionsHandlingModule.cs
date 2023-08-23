@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
+using Aristocrab.AppModules;
 using Anizavr.Backend.Application.Exceptions;
-using Anizavr.Backend.WebApi.Modules.Shared;
 using FluentValidation;
 using Serilog;
 
