@@ -19,7 +19,7 @@ public static class AppModulesExtensions
         AddModules(builder, types.Select(x => x.Assembly).ToArray());
     }
 
-    private static Func<Type, bool> AppModulePredicate => 
+    private static Func<Type, bool> AppModulesPredicate => 
         type => typeof(AppModule).IsAssignableFrom(type) && type is { IsAbstract: false, IsInterface: false };
 
     public static void AddModules(this WebApplicationBuilder builder, params Assembly[] assemblies)
@@ -31,7 +31,7 @@ public static class AppModulesExtensions
         foreach (var assembly in assemblies)
         {
             var modules = assembly.GetTypes()
-                .Where(AppModulePredicate);
+                .Where(AppModulesPredicate);
 
             var instances = modules
                 .Select(Activator.CreateInstance)
