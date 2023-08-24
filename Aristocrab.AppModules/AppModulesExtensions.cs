@@ -51,11 +51,13 @@ public static class AppModulesExtensions
             logger ??= builder.Services
                 .BuildServiceProvider()
                 .GetRequiredService<ILogger<AppModule>>();
-            logger.LogDebug("[{Assembly}] AppModules found: {Count}", assembly.GetName().Name, modulesCollection.AppModules.Count);
+            logger.LogDebug("[{Assembly}] AppModules found: {AppModulesCount}", 
+                assembly.GetName().Name, modulesCollection.AppModules.Count);
 
             foreach (var instance in instances.OrderBy(x => x.GetType().Name))
             {
-                logger.LogDebug("{Type} (Enabled: {Enabled})", instance.GetType().Name, instance.Enabled);
+                logger.LogDebug("{Type} (Enabled: {Enabled})", 
+                    instance.GetType().Name, instance.Enabled);
             }
         }
 
@@ -74,6 +76,10 @@ public static class AppModulesExtensions
         {
             module.ConfigureApplication(app);
         }
+        
+        var logger = app.Services
+            .GetRequiredService<ILogger<AppModule>>();
+        logger.LogDebug("AppModules ({Count}) configured", modulesCollection.AppModules.Count);
     }
     
     #endregion
