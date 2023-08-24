@@ -6,6 +6,8 @@ namespace Anizavr.Backend.WebApi.Modules.Serilog;
 
 public class SerilogModule : AppModule
 {
+    public override int OrderIndex => -1;
+
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
         Log.Logger = new LoggerConfiguration()
