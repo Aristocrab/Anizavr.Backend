@@ -50,8 +50,7 @@ public class AnimeService : IAnimeService
         var anime = new Anime
         {
             ShikimoriDetails = shikimoriDetails,
-            KodikDetails = kodikDetails,
-            Timestamps = null
+            KodikDetails = kodikDetails
         };
         
         return anime;
