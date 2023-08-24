@@ -15,14 +15,14 @@ namespace Anizavr.Backend.Application.Services;
 
 public class UserService : IUserService
 {
-    private readonly UserDbContext _dbContext;
+    private readonly IAnizavrDbContext _dbContext;
     private readonly IAnimeService _animeService;
     private readonly IValidator<RegisterDto> _registerDtoValidator;
     private readonly IValidator<LoginDto> _loginDtoValidator;
     
     private static readonly object Lock = new();
 
-    public UserService(UserDbContext dbContext, IAnimeService animeService,
+    public UserService(IAnizavrDbContext dbContext, IAnimeService animeService,
         IValidator<RegisterDto> registerDtoValidator, IValidator<LoginDto> loginDtoValidator)
     {
         _dbContext = dbContext;

@@ -10,7 +10,9 @@ public class DatabaseModule : AppModule
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
         Directory.CreateDirectory(Constants.DatabasePath);
-        builder.Services.AddDbContext<UserDbContext>(options =>
+        builder.Services.AddDbContext<AnizavrDbContext>(options =>
             options.UseSqlite(Constants.ConnectionString));
+
+        builder.Services.AddScoped<IAnizavrDbContext>(services => services.GetRequiredService<AnizavrDbContext>());
     }
 }

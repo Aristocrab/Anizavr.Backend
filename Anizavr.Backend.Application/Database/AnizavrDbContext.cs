@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Anizavr.Backend.Application.Database;
 
-public sealed class UserDbContext : DbContext
+public sealed class AnizavrDbContext : DbContext, IAnizavrDbContext
 {
-    public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
+    public AnizavrDbContext(DbContextOptions<AnizavrDbContext> options) : base(options)
     {
         Database.EnsureCreated();
     }
