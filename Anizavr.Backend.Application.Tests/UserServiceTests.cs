@@ -25,7 +25,7 @@ public class UserServiceTests
         // Arrange
         var faker = new Faker<RegisterDto>()
             .RuleFor(x => x.Username, 
-                f => f.Internet.UserName().Replace('.', '_'))
+                f => f.Random.String2(6, 12))
             .RuleFor(x => x.Password, 
                 f => f.Internet.Password())
             .RuleFor(x => x.Email, 
@@ -65,7 +65,7 @@ public class UserServiceTests
         // Arrange
         var faker = new Faker<RegisterDto>()
             .RuleFor(x => x.Username, 
-                f => f.Internet.UserName().Replace('.', '_'))
+                f => f.Random.String2(6, 12))
             .RuleFor(x => x.Password, 
                 f => f.Internet.Password())
             .RuleFor(x => x.Email, 
@@ -92,7 +92,7 @@ public class UserServiceTests
         // Arrange
         var faker = new Faker<RegisterDto>()
             .RuleFor(x => x.Username, 
-                f => f.Internet.UserName().Replace('.', '_'))
+                f => f.Random.String2(6, 12))
             .RuleFor(x => x.Password, 
                 f => f.Internet.Password())
             .RuleFor(x => x.Email, 
