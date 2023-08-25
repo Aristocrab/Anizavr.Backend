@@ -34,7 +34,7 @@ public class AnimeService : IAnimeService
         AnimeID shikimoriDetails;
         try
         {
-            shikimoriDetails = await _shikimoriClient.Animes.GetAnime(id);
+            shikimoriDetails = await _shikimoriClient.GetAnime(id);
         }
         catch
         {
@@ -61,7 +61,7 @@ public class AnimeService : IAnimeService
         AnimeID shikimoriDetails;
         try
         {
-            shikimoriDetails = await _shikimoriClient.Animes.GetAnime(id);
+            shikimoriDetails = await _shikimoriClient.GetAnime(id);
         }
         catch
         {
@@ -73,7 +73,7 @@ public class AnimeService : IAnimeService
 
     public async Task<ShikimoriRelated[]> GetRelated(long id)
     {
-        var shikimoriDetails = await _shikimoriClient.Animes.GetRelated(id);
+        var shikimoriDetails = await _shikimoriClient.GetRelated(id);
         
         return shikimoriDetails
             .Where(x => x.Manga is null)
@@ -283,7 +283,7 @@ public class AnimeService : IAnimeService
         }
         else
         {
-            var similar = await _shikimoriClient.Animes.GetSimilar(id);
+            var similar = await _shikimoriClient.GetSimilar(id);
 
             AnimeHelper.FixDeathNotePoster(similar.FirstOrDefault(x => x.Id == AnimeHelper.DeathNoteId));
             return similar.Adapt<List<AnimePreview>>();
@@ -335,7 +335,7 @@ public class AnimeService : IAnimeService
     
     public async Task<List<AnimePreview>> GetPopularAnime(int limit, int page)
     {
-        var popularAnime = await _shikimoriClient.Animes.GetAnime(new AnimeRequestSettings
+        var popularAnime = await _shikimoriClient.GetAnime(new AnimeRequestSettings
         {
             order = Order.popularity,
             limit = limit,
