@@ -6,6 +6,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anizavr.Backend.WebApi", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aristocrab.AppModules", "Aristocrab.AppModules\Aristocrab.AppModules.csproj", "{48BDE6F6-8F6B-4CD2-B3C4-862C38747E41}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EC7B7252-F39E-49B3-BE4B-B28FF3E14C0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F6299037-019D-4889-A70A-FEEFF6401B1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anizavr.Backend.Application.Tests", "Anizavr.Backend.Application.Tests\Anizavr.Backend.Application.Tests.csproj", "{8FDA71EC-FB5C-4EA7-8708-97520FD4F89C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +30,15 @@ Global
 		{48BDE6F6-8F6B-4CD2-B3C4-862C38747E41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48BDE6F6-8F6B-4CD2-B3C4-862C38747E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48BDE6F6-8F6B-4CD2-B3C4-862C38747E41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FDA71EC-FB5C-4EA7-8708-97520FD4F89C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FDA71EC-FB5C-4EA7-8708-97520FD4F89C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FDA71EC-FB5C-4EA7-8708-97520FD4F89C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FDA71EC-FB5C-4EA7-8708-97520FD4F89C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A1351E27-810D-4CA1-AE10-F67CBA9E69E4} = {EC7B7252-F39E-49B3-BE4B-B28FF3E14C0D}
+		{EFF34F2D-77E3-45D4-8E67-B9D92009882D} = {EC7B7252-F39E-49B3-BE4B-B28FF3E14C0D}
+		{48BDE6F6-8F6B-4CD2-B3C4-862C38747E41} = {EC7B7252-F39E-49B3-BE4B-B28FF3E14C0D}
+		{8FDA71EC-FB5C-4EA7-8708-97520FD4F89C} = {F6299037-019D-4889-A70A-FEEFF6401B1A}
 	EndGlobalSection
 EndGlobal
