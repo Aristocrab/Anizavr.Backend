@@ -1,4 +1,5 @@
-﻿using Anizavr.Backend.Application.Exceptions;
+﻿using Anizavr.Backend.Application.Configuration;
+using Anizavr.Backend.Application.Exceptions;
 using Anizavr.Backend.Application.KodikApi;
 using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.Shared;
@@ -17,14 +18,17 @@ public class AnimeService : IAnimeService
     private readonly IShikimoriClient _shikimoriClient;
     private readonly IKodikApi _kodikApi;
     private readonly IShikimoriApi _shikimoriApi;
+    private readonly IApplicationConfiguration _configuration;
 
     public AnimeService(IShikimoriClient shikimoriClient, 
         IKodikApi kodikApi, 
-        IShikimoriApi shikimoriApi)
+        IShikimoriApi shikimoriApi,
+        IApplicationConfiguration configuration)
     {
         _shikimoriClient = shikimoriClient;
         _kodikApi = kodikApi;
         _shikimoriApi = shikimoriApi;
+        _configuration = configuration;
     }
 
     #region Anime info
@@ -41,7 +45,7 @@ public class AnimeService : IAnimeService
             throw new NotFoundException("Аниме", nameof(id), id.ToString());
         }
         
-        var kodikDetails = await _kodikApi.GetAnime(id, Constants.KodikKey);
+        var kodikDetails = await _kodikApi.GetAnime(id, _configuration.KodikKey);
         if (id == AnimeHelper.DeathNoteId)
         {
             AnimeHelper.FixDeathNotePoster(shikimoriDetails);
@@ -299,7 +303,7 @@ public class AnimeService : IAnimeService
         KodikResults search;
         if (genres is null)
         {
-            search = await _kodikApi.SearchAnime(query, Constants.KodikKey);
+            search = await _kodikApi.SearchAnime(query, _configuration.KodikKey);
         }
         else
         {

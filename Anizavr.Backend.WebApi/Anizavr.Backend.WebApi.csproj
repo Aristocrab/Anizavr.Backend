@@ -30,4 +30,6 @@
       <ProjectReference Include="..\Anizavr.Backend.Application\Anizavr.Backend.Application.csproj" />
     </ItemGroup>
 
+
+
 </Project>

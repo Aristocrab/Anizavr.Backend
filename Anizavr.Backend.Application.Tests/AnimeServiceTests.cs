@@ -1,3 +1,5 @@
+using Anizavr.Backend.Application.Configuration;
+
 namespace Anizavr.Backend.Application.Tests;
 
 public class AnimeServiceTests
@@ -13,7 +15,9 @@ public class AnimeServiceTests
         _shikimoriClient = Substitute.For<IShikimoriClient>();
         _kodikApi = Substitute.For<IKodikApi>();
         _shikimoriApi = Substitute.For<IShikimoriApi>();
-        _animeService = new AnimeService(_shikimoriClient, _kodikApi, _shikimoriApi);
+        var configuration = _fixture.Create<ApplicationConfiguration>();
+        
+        _animeService = new AnimeService(_shikimoriClient, _kodikApi, _shikimoriApi, configuration);
     }
 
     [Fact]

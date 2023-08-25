@@ -1,5 +1,4 @@
 ﻿using Aristocrab.AppModules;
-using Anizavr.Backend.Application.Shared;
 using Anizavr.Backend.Application.ShikimoriApi;
 using NSubstitute;
 using Refit;
@@ -12,9 +11,11 @@ public class ShikimoriModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
+        var configuration = builder.Configuration;
+        
         var logger = Substitute.For<ILogger>();
-        var settings = new ClientSettings(Constants.ShikimoriClientName, 
-            Constants.ShikimoriClientId, Constants.ShikimoriClientKey);
+        var settings = new ClientSettings(configuration["ShikimoriClient:Name"]!, 
+            configuration["ShikimoriClient:Id"], configuration["ANIZAVR_ShikimoriClientKey"]!);
         var client = new ShikimoriClient(logger, settings);
         builder.Services.AddSingleton<IShikimoriClient>(new ShikimoriClientWrapper(client));
 
