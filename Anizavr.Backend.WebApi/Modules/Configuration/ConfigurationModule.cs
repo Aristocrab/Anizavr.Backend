@@ -6,6 +6,8 @@ namespace Anizavr.Backend.WebApi.Modules.Configuration;
 
 public class ConfigurationModule : AppModule
 {
+    public override int OrderIndex => -1;
+
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.Configuration.AddEnvironmentVariables("ANIZAVR_");
