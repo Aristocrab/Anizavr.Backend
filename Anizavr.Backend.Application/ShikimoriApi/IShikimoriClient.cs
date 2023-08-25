@@ -11,5 +11,4 @@ public interface IShikimoriClient
     Task<AnimeID> GetAnime(long id, AccessToken? personalInformation = null);
     Task<Anime[]> GetSimilar(long id, AccessToken? personalInformation = null);
     Task<Related[]> GetRelated(long id, AccessToken? personalInformation = null);
-
 }
