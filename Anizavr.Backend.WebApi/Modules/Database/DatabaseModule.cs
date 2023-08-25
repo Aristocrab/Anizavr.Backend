@@ -13,6 +13,7 @@ public class DatabaseModule : AppModule
         builder.Services.AddDbContext<AnizavrDbContext>(options =>
             options.UseSqlite(Constants.ConnectionString));
 
-        builder.Services.AddScoped<IAnizavrDbContext>(services => services.GetRequiredService<AnizavrDbContext>());
+        builder.Services.AddScoped<IAnizavrDbContext>(services => 
+            services.GetRequiredService<AnizavrDbContext>());
     }
 }

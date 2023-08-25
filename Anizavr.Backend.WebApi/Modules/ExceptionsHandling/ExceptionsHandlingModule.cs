@@ -60,7 +60,10 @@ public class ExceptionsHandlingModule : AppModule
         };
         
         Log.Error("{RequestMethod} {RequestPath} responded {StatusCode}. {ErrorMessage}",
-            context.Request.Method, context.Request.Path, context.Response.StatusCode, error.ErrorMessage);
+            context.Request.Method, 
+            context.Request.Path, 
+            context.Response.StatusCode, 
+            error.ErrorMessage);
         
         var errorJson = JsonSerializer.Serialize(error);
         await context.Response.WriteAsync(errorJson);
