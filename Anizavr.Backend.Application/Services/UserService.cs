@@ -48,11 +48,6 @@ public class UserService : IUserService
 
         var avatarUrl =
             $"https://api.dicebear.com/6.x/thumbs/svg?seed={registerDto.Username}&shapeColor=43aa52&backgroundColor=daf9d9";
-        
-        // if (registerDto.Avatar is not null)
-        // {
-        //     avatarUrl = await SaveAvatar(registerDto.Avatar, registerDto.Email);
-        // }
 
         var (hash, salt) = Hashing.HashPassword(registerDto.Password);
         
