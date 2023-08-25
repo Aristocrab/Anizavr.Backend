@@ -10,10 +10,10 @@ public sealed class AnizavrDbContext : DbContext, IAnizavrDbContext
         Database.EnsureCreated();
     }
     
-    public required DbSet<User> Users { get; set; }
-    public required DbSet<Comment> Comments { get; set; }
-    public required DbSet<UserWatchingAnime> UserWatchingAnimeList { get; set; }
-    public required DbSet<UserWatchedAnime> UserWatchedAnimeList { get; set; }
-    public required DbSet<WishlistAnime> Wishlist { get; set; }
-    public required DbSet<TierlistAnime> Tierlist { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<UserWatchingAnime> UserWatchingAnimeList { get; set; } = null!;
+    public DbSet<UserWatchedAnime> UserWatchedAnimeList { get; set; } = null!;
+    public DbSet<WishlistAnime> Wishlist { get; set; } = null!;
+    public DbSet<TierlistAnime> Tierlist { get; set; } = null!;
 }
