@@ -46,11 +46,12 @@ public class UserServiceTests
     public async Task Register_ShouldThrowValidationException_WhenRegisterDtoIsInvalid()
     {
         // Arrange
-        var faker = new Faker<RegisterDto>()
-            .RuleFor(x => x.Username, _ => "")
-            .RuleFor(x => x.Password, _ => "")
-            .RuleFor(x => x.Email, _ => "");
-        var registerDto = faker.Generate();
+        var registerDto = new RegisterDto
+        {
+            Email = "",
+            Password = "",
+            Username = ""
+        };
         
         // Act
         var action = async () => await _userService.Register(registerDto);
