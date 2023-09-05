@@ -12,7 +12,10 @@
 * Mapster
 * Refit
 * Serilog
-* NSubstitute
 * FluentValidation
 * GraphQL.Client
 * ShikimoriSharp
+* xunit
+* NSubstitute
+* Bogus
+* AutoFixture
