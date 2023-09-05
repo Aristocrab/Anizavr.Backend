@@ -6,14 +6,14 @@
 [![Anizavr homepage](https://i.imgur.com/SLeMip2.png)](https://anizavr.tech/)
 
 ## Backend technologies:
-* dotNET 7
+* .NET 7
 * ASP.NET Core
+* Scrutor
 * EF Core & Sqlite
 * Mapster
 * Refit
 * Serilog
 * FluentValidation
-* GraphQL.Client
 * ShikimoriSharp
 * xunit
 * NSubstitute
