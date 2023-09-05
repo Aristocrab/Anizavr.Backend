@@ -481,3 +481,6 @@ $RECYCLE.BIN/
 
 # Ignore images
 WebApi/Images/
+
+# Ignore fly.io configuration
+fly.toml
