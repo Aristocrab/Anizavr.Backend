@@ -1,4 +1,4 @@
-﻿using Aristocrab.AppModules;
+﻿using AspNetCore.AppModules;
 using Anizavr.Backend.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,8 +21,13 @@ public class CommonModule : AppModule
                 });
         });
 
-        builder.Services.AddScoped<IAnimeService, AnimeService>();
-        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.Scan(scan =>
+            scan
+                .FromAssemblyOf<IUserService>()
+                .AddClasses(classes => 
+                    classes.Where(x => x.Name.EndsWith("Service")))
+                .AsImplementedInterfaces()
+        );
     }
 
     public override void ConfigureApplication(WebApplication app)

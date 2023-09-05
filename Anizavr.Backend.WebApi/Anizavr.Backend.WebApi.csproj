@@ -18,6 +18,7 @@
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
       <PackageReference Include="NSubstitute" Version="5.0.0" />
+      <PackageReference Include="Scrutor" Version="4.2.2" />
       <PackageReference Include="Serilog" Version="3.0.1" />
       <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
@@ -26,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Aristocrab.AppModules\Aristocrab.AppModules.csproj" />
+      <ProjectReference Include="..\AspNetCore.AppModules\AspNetCore.AppModules.csproj" />
       <ProjectReference Include="..\Anizavr.Backend.Application\Anizavr.Backend.Application.csproj" />
     </ItemGroup>
 
