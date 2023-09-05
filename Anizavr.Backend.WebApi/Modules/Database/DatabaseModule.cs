@@ -1,4 +1,4 @@
-﻿using Aristocrab.AppModules;
+﻿using AspNetCore.AppModules;
 using Anizavr.Backend.Application.Database;
 using Microsoft.EntityFrameworkCore;
 

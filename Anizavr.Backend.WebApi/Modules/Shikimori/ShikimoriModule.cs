@@ -1,4 +1,4 @@
-﻿using Aristocrab.AppModules;
+﻿using AspNetCore.AppModules;
 using Anizavr.Backend.Application.ShikimoriApi;
 using NSubstitute;
 using Refit;

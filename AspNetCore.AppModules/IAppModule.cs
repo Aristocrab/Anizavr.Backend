@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace Aristocrab.AppModules;
+namespace AspNetCore.AppModules;
 
 public interface IAppModule
 {

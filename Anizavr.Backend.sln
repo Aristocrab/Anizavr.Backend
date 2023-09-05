@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anizavr.Backend.Application
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anizavr.Backend.WebApi", "Anizavr.Backend.WebApi\Anizavr.Backend.WebApi.csproj", "{EFF34F2D-77E3-45D4-8E67-B9D92009882D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aristocrab.AppModules", "Aristocrab.AppModules\Aristocrab.AppModules.csproj", "{48BDE6F6-8F6B-4CD2-B3C4-862C38747E41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.AppModules", "AspNetCore.AppModules\AspNetCore.AppModules.csproj", "{48BDE6F6-8F6B-4CD2-B3C4-862C38747E41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EC7B7252-F39E-49B3-BE4B-B28FF3E14C0D}"
 EndProject

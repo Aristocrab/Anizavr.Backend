@@ -1,4 +1,4 @@
-namespace Aristocrab.AppModules;
+namespace AspNetCore.AppModules;
 
 public class AppModulesCollection
 {

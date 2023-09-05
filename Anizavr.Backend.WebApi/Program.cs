@@ -1,4 +1,4 @@
-using Aristocrab.AppModules;
+using AspNetCore.AppModules;
 
 var builder = WebApplication.CreateBuilder(args);
 

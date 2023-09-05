@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using Aristocrab.AppModules;
+using AspNetCore.AppModules;
 using Anizavr.Backend.Application.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;

@@ -3,24 +3,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Aristocrab.AppModules;
+namespace AspNetCore.AppModules;
 
 public static class AppModulesExtensions
 {
     #region AddModules
 
+    private static Func<Type, bool> AppModulesPredicate => 
+        type => typeof(AppModule).IsAssignableFrom(type) && type is { IsAbstract: false };
+
     public static void AddModules(this WebApplicationBuilder builder)
     {
         AddModules(builder, Assembly.GetCallingAssembly());
     }
-    
-    public static void AddModules(this WebApplicationBuilder builder, params Type[] types)
-    {
-        AddModules(builder, types.Select(x => x.Assembly).ToArray());
-    }
-
-    private static Func<Type, bool> AppModulesPredicate => 
-        type => typeof(AppModule).IsAssignableFrom(type) && type is { IsAbstract: false };
 
     public static void AddModules(this WebApplicationBuilder builder, params Assembly[] assemblies)
     {

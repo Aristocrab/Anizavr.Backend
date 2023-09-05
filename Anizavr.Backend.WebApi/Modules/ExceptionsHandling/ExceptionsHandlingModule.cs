@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
-using Aristocrab.AppModules;
+using AspNetCore.AppModules;
 using Anizavr.Backend.Application.Exceptions;
 using FluentValidation;
 using Serilog;
