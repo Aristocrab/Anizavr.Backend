@@ -16,7 +16,7 @@ public class AuthorizationModule : AppModule
                 config.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidAudience = configuration["Jwt:Audience"],
-                    ValidIssuer = configuration["Jwt:JwtIssuer"],
+                    ValidIssuer = configuration["Jwt:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(configuration["ANIZAVR_JwtSecretKey"]!
                             )),
