@@ -18,7 +18,6 @@ public class ConfigurationModule : AppModule
             ShikimoriClientId = config.GetRequiredValue("ShikimoriClient:Id"),
             ShikimoriClientName = config.GetRequiredValue("ShikimoriClient:Name"),
             ShikimoriClientKey = config.GetRequiredValue("ANIZAVR_ShikimoriClientKey"),
-            AnimeSkipKey = config.GetRequiredValue("ANIZAVR_AnimeSkipKey"),
             KodikKey = config.GetRequiredValue("ANIZAVR_KodikKey")
         };
 
