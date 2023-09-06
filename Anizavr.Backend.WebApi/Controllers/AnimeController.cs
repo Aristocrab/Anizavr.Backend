@@ -13,9 +13,9 @@ namespace Anizavr.Backend.WebApi.Controllers;
 [ResponseCache(CacheProfileName = "DefaultCacheProfile")]
 public class AnimeController : BaseController
 {
-    private readonly AnimeService _animeService;
+    private readonly IAnimeService _animeService;
 
-    public AnimeController(AnimeService animeService)
+    public AnimeController(IAnimeService animeService)
     {
         _animeService = animeService;
     }
@@ -65,6 +65,6 @@ public class AnimeController : BaseController
     [HttpGet("getGenres")]
     public List<string> GetGenres()
     {
-        return AnimeService.GetGenres();
+        return _animeService.GetGenresList();
     }
 }

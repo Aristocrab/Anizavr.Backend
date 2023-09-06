@@ -1,10 +1,10 @@
-﻿using Anizavr.Backend.Application.Exceptions;
+﻿using Anizavr.Backend.Application.Configuration;
+using Anizavr.Backend.Application.Exceptions;
 using Anizavr.Backend.Application.KodikApi;
 using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.Shared;
 using Anizavr.Backend.Application.ShikimoriApi;
 using Mapster;
-using ShikimoriSharp;
 using ShikimoriSharp.Bases;
 using ShikimoriSharp.Classes;
 using ShikimoriSharp.Enums;
@@ -13,19 +13,22 @@ using Anime = Anizavr.Backend.Application.Entities.Anime;
 
 namespace Anizavr.Backend.Application.Services;
 
-public class AnimeService
+public class AnimeService : IAnimeService
 {
-    private readonly ShikimoriClient _shikimoriClient;
+    private readonly IShikimoriClient _shikimoriClient;
     private readonly IKodikApi _kodikApi;
     private readonly IShikimoriApi _shikimoriApi;
+    private readonly IApplicationConfiguration _configuration;
 
-    public AnimeService(ShikimoriClient shikimoriClient, 
+    public AnimeService(IShikimoriClient shikimoriClient, 
         IKodikApi kodikApi, 
-        IShikimoriApi shikimoriApi)
+        IShikimoriApi shikimoriApi,
+        IApplicationConfiguration configuration)
     {
         _shikimoriClient = shikimoriClient;
         _kodikApi = kodikApi;
         _shikimoriApi = shikimoriApi;
+        _configuration = configuration;
     }
 
     #region Anime info
@@ -35,14 +38,14 @@ public class AnimeService
         AnimeID shikimoriDetails;
         try
         {
-            shikimoriDetails = await _shikimoriClient.Animes.GetAnime(id);
+            shikimoriDetails = await _shikimoriClient.GetAnime(id);
         }
         catch
         {
             throw new NotFoundException("Аниме", nameof(id), id.ToString());
         }
         
-        var kodikDetails = await _kodikApi.GetAnime(id, Constants.KodikKey);
+        var kodikDetails = await _kodikApi.GetAnime(id, _configuration.KodikKey);
         if (id == AnimeHelper.DeathNoteId)
         {
             AnimeHelper.FixDeathNotePoster(shikimoriDetails);
@@ -51,16 +54,30 @@ public class AnimeService
         var anime = new Anime
         {
             ShikimoriDetails = shikimoriDetails,
-            KodikDetails = kodikDetails,
-            Timestamps = null
+            KodikDetails = kodikDetails
         };
         
         return anime;
     }
+    
+    public async Task<AnimeID> GetShikimoriAnimeById(long id)
+    {
+        AnimeID shikimoriDetails;
+        try
+        {
+            shikimoriDetails = await _shikimoriClient.GetAnime(id);
+        }
+        catch
+        {
+            throw new NotFoundException("Аниме", nameof(id), id.ToString());
+        }
+        
+        return shikimoriDetails;
+    }
 
     public async Task<ShikimoriRelated[]> GetRelated(long id)
     {
-        var shikimoriDetails = await _shikimoriClient.Animes.GetRelated(id);
+        var shikimoriDetails = await _shikimoriClient.GetRelated(id);
         
         return shikimoriDetails
             .Where(x => x.Manga is null)
@@ -270,7 +287,7 @@ public class AnimeService
         }
         else
         {
-            var similar = await _shikimoriClient.Animes.GetSimilar(id);
+            var similar = await _shikimoriClient.GetSimilar(id);
 
             AnimeHelper.FixDeathNotePoster(similar.FirstOrDefault(x => x.Id == AnimeHelper.DeathNoteId));
             return similar.Adapt<List<AnimePreview>>();
@@ -286,7 +303,7 @@ public class AnimeService
         KodikResults search;
         if (genres is null)
         {
-            search = await _kodikApi.SearchAnime(query, Constants.KodikKey);
+            search = await _kodikApi.SearchAnime(query, _configuration.KodikKey);
         }
         else
         {
@@ -311,7 +328,7 @@ public class AnimeService
         return search;
     }
     
-    public static List<string> GetGenres()
+    public List<string> GetGenresList()
     {
         return ShikimoriGenres.List;
     }
@@ -322,7 +339,7 @@ public class AnimeService
     
     public async Task<List<AnimePreview>> GetPopularAnime(int limit, int page)
     {
-        var popularAnime = await _shikimoriClient.Animes.GetAnime(new AnimeRequestSettings
+        var popularAnime = await _shikimoriClient.GetAnime(new AnimeRequestSettings
         {
             order = Order.popularity,
             limit = limit,

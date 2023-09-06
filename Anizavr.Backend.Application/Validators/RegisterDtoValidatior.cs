@@ -33,6 +33,6 @@ public partial class RegisterDtoValidatior : AbstractValidator<RegisterDto>
     [GeneratedRegex("^[A-Za-z0-9_]+$")]
     private static partial Regex UsernameRegex();
     
-    [GeneratedRegex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")]
+    [GeneratedRegex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
     private static partial Regex EmailRegex();
 }

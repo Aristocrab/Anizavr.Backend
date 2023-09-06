@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Application.Database.Migrations
 {
-    [DbContext(typeof(UserDbContext))]
+    [DbContext(typeof(AnizavrDbContext))]
     [Migration("20230724154343_WishlistKind")]
     partial class WishlistKind
     {

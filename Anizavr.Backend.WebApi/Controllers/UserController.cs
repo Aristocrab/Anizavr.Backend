@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Anizavr.Backend.Application.Dtos;
 using Anizavr.Backend.Application.Services;
-using Anizavr.Backend.Application.Shared;
+using Anizavr.Backend.WebApi.Configuration;
 using Anizavr.Backend.WebApi.Controllers.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,27 +15,29 @@ namespace Anizavr.Backend.WebApi.Controllers;
 [Route("/api/users")]
 public class UserController : BaseController
 {
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
+    private readonly IWebApiConfiguration _configuration;
 
-    public UserController(UserService userService)
+    public UserController(IUserService userService, IWebApiConfiguration configuration)
     {
         _userService = userService;
+        _configuration = configuration;
     }
     
-    private static string GenerateJwtToken(Guid userId)
+    private string GenerateJwtToken(Guid userId)
     {
         var claims = new List<Claim>
         {
             new("UserId", userId.ToString())
         };
 
-        var secretBytes = Encoding.UTF8.GetBytes(Constants.JwtSecretKey);
+        var secretBytes = Encoding.UTF8.GetBytes(_configuration.JwtSecretKey);
         var key = new SymmetricSecurityKey(secretBytes);
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            audience: Constants.Audience,
-            issuer: Constants.Issuer,
+            audience: _configuration.JwtAudience,
+            issuer: _configuration.JwtIssuer,
             claims: claims,
             notBefore: DateTime.Now,
             signingCredentials: signingCredentials);
