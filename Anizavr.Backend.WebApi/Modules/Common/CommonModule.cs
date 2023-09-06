@@ -27,6 +27,7 @@ public class CommonModule : AppModule
                 .AddClasses(classes => 
                     classes.Where(x => x.Name.EndsWith("Service")))
                 .AsImplementedInterfaces()
+                .WithTransientLifetime()
         );
     }
 
