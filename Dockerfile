@@ -8,6 +8,7 @@ WORKDIR /src
 # copy all the layers' csproj files into respective folders
 COPY ["./Anizavr.Backend.Application/Anizavr.Backend.Application.csproj", "src/Anizavr.Backend.Application/"]
 COPY ["./Anizavr.Backend.WebApi/Anizavr.Backend.WebApi.csproj", "src/Anizavr.Backend.WebApi/"]
+COPY ["./AspNetCore.AppModules/AspNetCore.AppModules.csproj", "src/AspNetCore.AppModules/"]
 
 # run restore over API project - this pulls restore over the dependent projects as well
 RUN dotnet restore "src/Anizavr.Backend.WebApi/Anizavr.Backend.WebApi.csproj"
