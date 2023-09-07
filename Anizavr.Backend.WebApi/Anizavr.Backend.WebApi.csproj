@@ -31,6 +31,8 @@
       <ProjectReference Include="..\Anizavr.Backend.Application\Anizavr.Backend.Application.csproj" />
     </ItemGroup>
 
-
+    <ItemGroup>
+        <InternalsVisibleTo Include="Anizavr.Backend.WebApi.IntegrationTests" />
+    </ItemGroup>
 
 </Project>
