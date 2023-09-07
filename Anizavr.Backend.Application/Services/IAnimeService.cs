@@ -1,7 +1,7 @@
-﻿using Anizavr.Backend.Application.KodikApi.Entities;
-using Anizavr.Backend.Application.ShikimoriApi;
+﻿using Anizavr.Backend.Domain.Entities.Kodik;
+using Anizavr.Backend.Domain.Entities.Shikimori;
 using ShikimoriSharp.Classes;
-using Anime = Anizavr.Backend.Application.Entities.Anime;
+using Anime = Anizavr.Backend.Domain.Entities.Anime;
 
 namespace Anizavr.Backend.Application.Services;
 

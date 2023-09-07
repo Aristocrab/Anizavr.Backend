@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using AspNetCore.AppModules;
+using AspNetCore.Extensions.AppModules;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Anizavr.Backend.WebApi.Modules.Authorization;

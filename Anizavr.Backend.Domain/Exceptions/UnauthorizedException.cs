@@ -1,4 +1,4 @@
-﻿namespace Anizavr.Backend.Application.Exceptions;
+﻿namespace Anizavr.Backend.Domain.Exceptions;
 
 public class UnauthorizedException : Exception
 {

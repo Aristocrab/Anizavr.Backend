@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AspNetCore.AppModules\AspNetCore.AppModules.csproj" />
+      <ProjectReference Include="..\AspNetCore.Extensions.AppModules\AspNetCore.Extensions.AppModules.csproj" />
       <ProjectReference Include="..\Anizavr.Backend.Application\Anizavr.Backend.Application.csproj" />
     </ItemGroup>
 

@@ -1,7 +1,7 @@
-﻿using Anizavr.Backend.Application.Entities;
-using Anizavr.Backend.Application.KodikApi.Entities;
-using Anizavr.Backend.Application.Services;
-using Anizavr.Backend.Application.ShikimoriApi;
+﻿using Anizavr.Backend.Application.Services;
+using Anizavr.Backend.Domain.Entities;
+using Anizavr.Backend.Domain.Entities.Kodik;
+using Anizavr.Backend.Domain.Entities.Shikimori;
 using Anizavr.Backend.WebApi.Controllers.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿namespace Anizavr.Backend.Application.Entities;
+﻿namespace Anizavr.Backend.Domain.Entities;
 
 public class WishlistAnime
 {

@@ -1,4 +1,4 @@
-﻿using AspNetCore.AppModules;
+﻿using AspNetCore.Extensions.AppModules;
 using Microsoft.OpenApi.Models;
 
 namespace Anizavr.Backend.WebApi.Modules.Swagger;

@@ -1,8 +1,9 @@
 using Anizavr.Backend.Application.Configuration;
 using Anizavr.Backend.Application.KodikApi;
-using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.Services;
 using Anizavr.Backend.Application.ShikimoriApi;
+using Anizavr.Backend.Domain.Entities.Kodik;
+using Anizavr.Backend.Domain.Entities.Shikimori;
 using AutoFixture;
 using FluentAssertions;
 using Mapster;

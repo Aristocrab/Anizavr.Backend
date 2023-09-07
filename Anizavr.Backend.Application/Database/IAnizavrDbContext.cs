@@ -1,4 +1,4 @@
-﻿using Anizavr.Backend.Application.Entities;
+﻿using Anizavr.Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Anizavr.Backend.Application.Database;

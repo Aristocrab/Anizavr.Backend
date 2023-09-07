@@ -1,4 +1,4 @@
-﻿using AspNetCore.AppModules;
+﻿using AspNetCore.Extensions.AppModules;
 using Anizavr.Backend.Application.ShikimoriApi;
 using NSubstitute;
 using Refit;

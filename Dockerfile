@@ -6,6 +6,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
 # copy all the layers' csproj files into respective folders
+COPY ["./Anizavr.Backend.Domain/Anizavr.Backend.Domain.csproj", "src/Anizavr.Backend.Domain/"]
 COPY ["./Anizavr.Backend.Application/Anizavr.Backend.Application.csproj", "src/Anizavr.Backend.Application/"]
 COPY ["./Anizavr.Backend.WebApi/Anizavr.Backend.WebApi.csproj", "src/Anizavr.Backend.WebApi/"]
 COPY ["./AspNetCore.AppModules/AspNetCore.AppModules.csproj", "src/AspNetCore.AppModules/"]

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using AspNetCore.AppModules;
+using AspNetCore.Extensions.AppModules;
 using Serilog;
 
 namespace Anizavr.Backend.WebApi.Modules.RequestLogging;

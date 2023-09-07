@@ -1,4 +1,4 @@
-﻿namespace Anizavr.Backend.Application.KodikApi.Entities;
+﻿namespace Anizavr.Backend.Domain.Entities.Kodik;
 
 public class KodikResults
 {

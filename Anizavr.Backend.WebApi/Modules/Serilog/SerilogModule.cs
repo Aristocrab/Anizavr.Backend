@@ -1,4 +1,4 @@
-﻿using AspNetCore.AppModules;
+﻿using AspNetCore.Extensions.AppModules;
 using Serilog;
 using Serilog.Events;
 
@@ -14,7 +14,7 @@ public class SerilogModule : AppModule
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
 #if DEBUG
-            .MinimumLevel.Override("AspNetCore.AppModules.AppModule", LogEventLevel.Debug)
+            .MinimumLevel.Override("AspNetCore.Extensions.AppModules.AppModule", LogEventLevel.Debug)
 #endif
             .WriteTo.Console()
             .CreateLogger();

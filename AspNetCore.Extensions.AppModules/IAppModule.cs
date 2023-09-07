@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace AspNetCore.AppModules;
+namespace AspNetCore.Extensions.AppModules;
 
 public interface IAppModule
 {

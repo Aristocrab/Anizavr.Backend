@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Anizavr.Backend.Application.ShikimoriApi;
+namespace Anizavr.Backend.Domain.Entities.Shikimori;
 
 public class ShikimoriRelated
 {

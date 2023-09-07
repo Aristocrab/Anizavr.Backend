@@ -1,4 +1,4 @@
-﻿using AspNetCore.AppModules;
+﻿using AspNetCore.Extensions.AppModules;
 using Anizavr.Backend.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 

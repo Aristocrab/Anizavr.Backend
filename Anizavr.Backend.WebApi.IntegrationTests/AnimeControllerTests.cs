@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
-using Anizavr.Backend.Application.Entities;
-using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.Services;
-using Anizavr.Backend.Application.ShikimoriApi;
+using Anizavr.Backend.Domain.Entities;
+using Anizavr.Backend.Domain.Entities.Kodik;
+using Anizavr.Backend.Domain.Entities.Shikimori;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;

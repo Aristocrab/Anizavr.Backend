@@ -1,15 +1,15 @@
 ﻿using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Dtos;
-using Anizavr.Backend.Application.Entities;
-using Anizavr.Backend.Application.Exceptions;
 using Anizavr.Backend.Application.Shared;
+using Anizavr.Backend.Domain.Entities;
+using Anizavr.Backend.Domain.Exceptions;
 using FluentValidation;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ShikimoriSharp.Classes;
-using Comment = Anizavr.Backend.Application.Entities.Comment;
-using User = Anizavr.Backend.Application.Entities.User;
+using Comment = Anizavr.Backend.Domain.Entities.Comment;
+using User = Anizavr.Backend.Domain.Entities.User;
 
 namespace Anizavr.Backend.Application.Services;
 

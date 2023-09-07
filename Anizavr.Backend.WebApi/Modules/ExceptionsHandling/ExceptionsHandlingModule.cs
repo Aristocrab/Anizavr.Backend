@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
-using AspNetCore.AppModules;
-using Anizavr.Backend.Application.Exceptions;
+using Anizavr.Backend.Domain.Exceptions;
+using AspNetCore.Extensions.AppModules;
 using FluentValidation;
 using Serilog;
 

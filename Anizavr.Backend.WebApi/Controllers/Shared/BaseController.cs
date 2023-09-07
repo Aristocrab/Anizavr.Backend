@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using Anizavr.Backend.Application.Exceptions;
+using Anizavr.Backend.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Anizavr.Backend.WebApi.Controllers.Shared;

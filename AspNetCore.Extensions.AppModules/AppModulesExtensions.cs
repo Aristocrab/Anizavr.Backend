@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.AppModules;
+namespace AspNetCore.Extensions.AppModules;
 
 public static class AppModulesExtensions
 {

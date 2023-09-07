@@ -1,7 +1,7 @@
-﻿using Anizavr.Backend.Application.KodikApi.Entities;
+﻿using Anizavr.Backend.Domain.Entities.Kodik;
 using ShikimoriSharp.Classes;
 
-namespace Anizavr.Backend.Application.Entities;
+namespace Anizavr.Backend.Domain.Entities;
 
 public class Anime
 {

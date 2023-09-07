@@ -1,4 +1,4 @@
-﻿using Anizavr.Backend.Application.KodikApi.Entities;
+﻿using Anizavr.Backend.Domain.Entities.Kodik;
 using Refit;
 
 namespace Anizavr.Backend.Application.KodikApi;

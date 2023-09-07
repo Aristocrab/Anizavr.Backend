@@ -1,4 +1,4 @@
-using AspNetCore.AppModules;
+using AspNetCore.Extensions.AppModules;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,4 @@
-namespace AspNetCore.AppModules;
+namespace AspNetCore.Extensions.AppModules;
 
 public class AppModulesCollection
 {
