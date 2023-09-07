@@ -48,7 +48,7 @@ public class AnimeControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         anime.Should().NotBeNull();
-        anime!.ShikimoriDetails.Id.Should().NotBe(0);
+        anime!.ShikimoriDetails.Id.Should().Be(expectedAnime.ShikimoriDetails.Id);
     }
     
     [Fact]
