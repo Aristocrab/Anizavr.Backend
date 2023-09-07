@@ -2,6 +2,11 @@ name: Unit tests
 
 on: [push]
 
+env:
+  ANIZAVR_ShikimoriClientKey: 42
+  ANIZAVR_KodikKey: 42
+  ANIZAVR_JwtSecretKey: 42
+
 jobs:
   test:
 
