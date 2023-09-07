@@ -371,7 +371,7 @@ public class UserService : IUserService
     {
         var user = await GetUserById(userId);
         var anime = await _animeService.GetShikimoriAnimeById(animeId);
-        var tierlist = user.Tierlist.OrderBy(x => x.Position).Select(x => x.Position).LastOrDefault();
+        var tierlist = user.Tierlist.OrderBy(x => x.Position).Select(x => x.Position).Last();
 
         lock (Lock)
         {
