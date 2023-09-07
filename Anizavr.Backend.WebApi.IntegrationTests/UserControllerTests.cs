@@ -1,10 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Json;
+using Anizavr.Backend.Application.Configuration;
 using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Dtos;
 using Anizavr.Backend.Application.Services;
 using Anizavr.Backend.Application.Validators;
+using Anizavr.Backend.WebApi.Configuration;
+using AutoFixture;
 using Bogus;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -35,11 +38,15 @@ public class UserControllerTests
         var loginDtoValidator = new LoginDtoValidator();
         _userService = new UserService(_dbContext, animeService, registerDtoValidator, loginDtoValidator);
         
+        var fixture = new Fixture();
+        
         var factory = new WebApplicationFactory<Program>();
         _client = factory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureTestServices(services =>
             {
+                services.AddSingleton<IApplicationConfiguration>(fixture.Create<ApplicationConfiguration>());
+                services.AddSingleton<IWebApiConfiguration>(fixture.Create<WebApiConfiguration>());
                 services.AddTransient<IUserService>(_ => _userService);
             });
         }).CreateClient();
@@ -66,8 +73,6 @@ public class UserControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         jwtToken.Should().NotBeEmpty();
-        deserializedToken.Issuer.Should().Be("https://anizavr.tech");
-        deserializedToken.Audiences.Should().Contain("https://anizavr.tech");
         deserializedToken.Claims.Should().Contain(x => x.Type == "UserId");
         deserializedToken.Payload
             .Where(x => x.Key == "UserId")
@@ -144,8 +149,6 @@ public class UserControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         jwtToken.Should().NotBeEmpty();
-        deserializedToken.Issuer.Should().Be("https://anizavr.tech");
-        deserializedToken.Audiences.Should().Contain("https://anizavr.tech");
         deserializedToken.Claims.Should().Contain(x => x.Type == "UserId");
     }
 
