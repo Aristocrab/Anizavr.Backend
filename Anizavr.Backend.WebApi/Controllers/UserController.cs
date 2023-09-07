@@ -48,22 +48,22 @@ public class UserController : BaseController
     
     [AllowAnonymous]
     [HttpGet("getUser/{username}")]
-    public async Task<UserDto> GetUser(string username)
+    public Task<UserDto> GetUser(string username)
     {
-        return await _userService.GetUser(username);
+        return _userService.GetUser(username);
     }
     
     [HttpGet("getCurrentUser")]
-    public async Task<UserDto?> GetCurrentUser()
+    public Task<UserDto> GetCurrentUser()
     {
-        return await _userService.GetUser(UserId);
+        return _userService.GetUser(UserId);
     }
     
     [AllowAnonymous]
     [HttpGet("getComments/{animeId}")]
-    public async Task<List<CommentDto>> GetComments(long animeId)
+    public Task<List<CommentDto>> GetComments(long animeId)
     {
-        return await _userService.GetAnimeComments(animeId);
+        return _userService.GetAnimeComments(animeId);
     }
 
     [AllowAnonymous]
@@ -84,80 +84,80 @@ public class UserController : BaseController
     
     [AllowAnonymous]
     [HttpGet("getUsersLeaderbord")]
-    public async Task<List<UserDto>> GetUsersLeaderbord()
+    public Task<List<UserDto>> GetUsersLeaderbord()
     {
-        return await _userService.GetUsersLeaderbord();
+        return _userService.GetUsersLeaderbord();
     }
     
     [HttpPost("addComment")]
-    public async Task AddComment([FromBody] AddCommentDto addCommentDto)
+    public Task AddComment([FromBody] AddCommentDto addCommentDto)
     {
-        await _userService.AddCommentToAnime(UserId, addCommentDto.AnimeId, addCommentDto.Text);
+        return _userService.AddCommentToAnime(UserId, addCommentDto.AnimeId, addCommentDto.Text);
     }
     
-    [HttpDelete("deleteComment/{commentId}")]
-    public async Task DeleteComment(Guid commentId)
+    [HttpDelete("deleteComment/{commentId:guid}")]
+    public Task DeleteComment(Guid commentId)
     {
-        await _userService.DeleteComment(UserId, commentId);
+        return _userService.DeleteComment(UserId, commentId);
     }
 
-    [HttpPost("addToWatched/{animeId}")]
-    public async Task AddAnimeToWatchedList(long animeId, int? userScore = null)
+    [HttpPost("addToWatched/{animeId:long}")]
+    public Task AddAnimeToWatchedList(long animeId, int? userScore = null)
     {
-        await _userService.AddAnimeToWatchedList(UserId, animeId, userScore);
+        return _userService.AddAnimeToWatchedList(UserId, animeId, userScore);
     }
     
-    [HttpPost("addToWatching/{animeId}")]
-    public async Task AddAnimeToWatchingList(long animeId, int currentEpisode, float secondsTotal)
+    [HttpPost("addToWatching/{animeId:long}")]
+    public Task AddAnimeToWatchingList(long animeId, int currentEpisode, float secondsTotal)
     {
-        await _userService.AddAnimeToWatchingList(UserId, animeId, currentEpisode, secondsTotal);
+        return _userService.AddAnimeToWatchingList(UserId, animeId, currentEpisode, secondsTotal);
     }
     
-    [HttpPost("addToWishlist/{animeId}")]
-    public async Task AddAnimeToWishlist(long animeId)
+    [HttpPost("addToWishlist/{animeId:long}")]
+    public Task AddAnimeToWishlist(long animeId)
     {
-        await _userService.AddAnimeToWishlist(UserId, animeId);
+        return _userService.AddAnimeToWishlist(UserId, animeId);
     }
 
     [HttpPut("finishEpisode")]
-    public async Task FinishEpisode(long animeId, int episodeFinished)
+    public Task FinishEpisode(long animeId, int episodeFinished)
     {
-        await _userService.FinishEpisode(UserId, animeId, episodeFinished);
+        return _userService.FinishEpisode(UserId, animeId, episodeFinished);
     }
 
     [HttpPut("updateTimestamps")]
-    public async Task UpdateTimestamps(long animeId, int secondsWatched)
+    public Task UpdateTimestamps(long animeId, int secondsWatched)
     {
-        await _userService.UpdateTimestamps(UserId, animeId, secondsWatched);
+        return _userService.UpdateTimestamps(UserId, animeId, secondsWatched);
     }
 
     [HttpDelete("removeFromWatching")]
-    public async Task RemoveAnimeFromWatchingList(long animeId)
+    public Task RemoveAnimeFromWatchingList(long animeId)
     {
-        await _userService.RemoveAnimeFromWatchingList(UserId, animeId);
+        return _userService.RemoveAnimeFromWatchingList(UserId, animeId);
     }
     
     [HttpDelete("removeFromWishlist")]
-    public async Task RemoveAnimeFromWishlist(long animeId)
+    public Task RemoveAnimeFromWishlist(long animeId)
     {
-        await _userService.RemoveAnimeFromWishlist(UserId, animeId);
+        return _userService.RemoveAnimeFromWishlist(UserId, animeId);
     }
     
-    [HttpPost("addToTierlist/{animeId}")]
-    public async Task AddAnimeToTierlist(long animeId)
+    [HttpPost("addToTierlist/{animeId:long}")]
+    public Task AddAnimeToTierlist(long animeId)
     {
-        await _userService.AddAnimeToTierlist(UserId, animeId);
+        return _userService.AddAnimeToTierlist(UserId, animeId);
     }
     
-    [HttpPut("changeTierlistOrder/{animeId}")]
-    public async Task ChangeTierlistOrder(long animeId, int newPosition)
+    [HttpPut("changeTierlistOrder/{animeId:long}")]
+    public Task ChangeTierlistOrder(long animeId, int newPosition)
     {
-        await _userService.ChangeTierlistOrder(UserId, animeId, newPosition);
+        return _userService.ChangeTierlistOrder(UserId, animeId, newPosition);
     }
     
-    [HttpDelete("removeFromTierlist/{animeId}")]
-    public async Task RemoveAnimeFromTierlist(long animeId)
+    [HttpDelete("removeFromTierlist/{animeId:long}")]
+    public Task RemoveAnimeFromTierlist(long animeId)
     {
-        await _userService.RemoveAnimeFromTierlist(UserId, animeId);
+        return _userService.RemoveAnimeFromTierlist(UserId, animeId);
     }
 }

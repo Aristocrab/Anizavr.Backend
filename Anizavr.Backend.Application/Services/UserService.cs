@@ -177,7 +177,7 @@ public class UserService : IUserService
         return comments;
     }
     
-    public async Task AddCommentToAnime(Guid userId, long animeId, string text)
+    public async Task<Guid> AddCommentToAnime(Guid userId, long animeId, string text)
     {
         var user = _dbContext.Users
             .Include(x => x.CurrentlyWatchingAnime)
@@ -197,6 +197,8 @@ public class UserService : IUserService
 
         _dbContext.Comments.Add(comment);
         await _dbContext.SaveChangesAsync();
+        
+        return comment.Id; 
     }
 
     public async Task DeleteComment(Guid userId, Guid commentId)

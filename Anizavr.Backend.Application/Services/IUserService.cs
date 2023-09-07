@@ -12,7 +12,7 @@ public interface IUserService
     Task<UserDto> GetUser(string username);
     
     Task<List<CommentDto>> GetAnimeComments(long animeId);
-    Task AddCommentToAnime(Guid userId, long animeId, string text);
+    Task<Guid> AddCommentToAnime(Guid userId, long animeId, string text);
     Task DeleteComment(Guid userId, Guid commentId);
     
     Task AddAnimeToWatchingList(Guid userId, long animeId, int currentEpisode, float secondsTotal);

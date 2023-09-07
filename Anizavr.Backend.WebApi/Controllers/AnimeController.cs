@@ -19,47 +19,47 @@ public class AnimeController : BaseController
     {
         _animeService = animeService;
     }
-
-    [HttpGet("getAnime/{id}")]
-    public async Task<Anime> GetAnimeById(int id)
+    
+    [HttpGet("getAnime/{id:long}")]
+    public Task<Anime> GetAnimeById(long id)
     {
-        return await _animeService.GetAnimeById(id);
+        return _animeService.GetAnimeById(id);
     }
 
-    [HttpGet("getSimilarAnime/{id}")]
-    public async Task<List<AnimePreview>> GetSimilarAnime(int id)
+    [HttpGet("getSimilarAnime/{id:long}")]
+    public Task<List<AnimePreview>> GetSimilarAnime(long id)
     {
-        return await _animeService.GetSimilarAnime(id);
+        return _animeService.GetSimilarAnime(id);
     }
 
-    [HttpGet("getRelatedAnime/{id}")]
-    public async Task<ShikimoriRelated[]> GetRelated(int id)
+    [HttpGet("getRelatedAnime/{id:long}")]
+    public Task<ShikimoriRelated[]> GetRelated(long id)
     {
-        return await _animeService.GetRelated(id);
+        return _animeService.GetRelated(id);
     }
 
     [HttpGet("searchAnime")]
-    public async Task<KodikResults> SearchAnime(string query, string? genres = null)
+    public Task<KodikResults> SearchAnime(string query, string? genres = null)
     {
-        return await _animeService.SearchAnime(query, genres);
+        return _animeService.SearchAnime(query, genres);
     }
 
     [HttpGet("getPopularAnime")]
-    public async Task<List<AnimePreview>> GetPopularAnime(int limit = 5, int page = 1)
+    public Task<List<AnimePreview>> GetPopularAnime(int limit = 5, int page = 1)
     {
-        return await _animeService.GetPopularAnime(limit, page);
+        return _animeService.GetPopularAnime(limit, page);
     }
 
     [HttpGet("getTrendingAnime")]
-    public async Task<List<AnimePreview>> GetOngoingAnime(int limit = 5, int page = 1)
+    public Task<List<AnimePreview>> GetOngoingAnime(int limit = 5, int page = 1)
     {
-        return await _animeService.GetTrendingAnime(limit, page);
+        return _animeService.GetTrendingAnime(limit, page);
     }
 
     [HttpGet("getJustReleasedAnime")]
-    public async Task<List<AnimePreview>> GetJustReleasedAnime(int limit = 5, int page = 1)
+    public Task<List<AnimePreview>> GetJustReleasedAnime(int limit = 5, int page = 1)
     {
-        return await _animeService.GetJustReleasedAnime(limit, page);
+        return _animeService.GetJustReleasedAnime(limit, page);
     }
     
     [HttpGet("getGenres")]
