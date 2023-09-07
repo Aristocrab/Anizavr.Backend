@@ -1,4 +1,15 @@
-﻿namespace Anizavr.Backend.Application.Tests;
+﻿using Anizavr.Backend.Application.Database;
+using Anizavr.Backend.Application.Dtos;
+using Anizavr.Backend.Application.Services;
+using Anizavr.Backend.Application.Validators;
+using Bogus;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using NSubstitute;
+using Xunit;
+using ValidationException = FluentValidation.ValidationException;
+
+namespace Anizavr.Backend.Application.Tests;
 
 public class UserServiceTests
 {

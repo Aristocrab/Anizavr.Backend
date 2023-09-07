@@ -1,4 +1,17 @@
 using Anizavr.Backend.Application.Configuration;
+using Anizavr.Backend.Application.KodikApi;
+using Anizavr.Backend.Application.KodikApi.Entities;
+using Anizavr.Backend.Application.Services;
+using Anizavr.Backend.Application.ShikimoriApi;
+using AutoFixture;
+using FluentAssertions;
+using Mapster;
+using NSubstitute;
+using ShikimoriSharp.AdditionalRequests;
+using ShikimoriSharp.Classes;
+using ShikimoriSharp.Enums;
+using ShikimoriSharp.Settings;
+using Xunit;
 
 namespace Anizavr.Backend.Application.Tests;
 
