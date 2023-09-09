@@ -1,5 +1,6 @@
 ﻿using AspNetCore.Extensions.AppModules;
 using Anizavr.Backend.Application.ShikimoriApi;
+using Anizavr.Backend.WebApi.Configuration;
 using NSubstitute;
 using Refit;
 using ShikimoriSharp;
@@ -11,13 +12,15 @@ public class ShikimoriModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        var configuration = builder.Configuration;
+        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IWebApiConfiguration>();
         
         var logger = Substitute.For<ILogger>();
-        var settings = new ClientSettings(configuration["ShikimoriClient:Name"]!, 
-            configuration["ShikimoriClient:Id"], configuration["ANIZAVR_ShikimoriClientKey"]!);
+        var settings = new ClientSettings(
+            configuration.ShikimoriClientName, 
+            configuration.ShikimoriClientId, 
+            configuration.ShikimoriClientKey);
         var client = new ShikimoriClient(logger, settings);
-        builder.Services.AddSingleton<IShikimoriClient>(new ShikimoriClientWrapper(client));
+        builder.Services.AddSingleton<IShikimoriClient>(new ShikimoriClientAdapter(client));
 
         builder.Services.AddSingleton(RestService.For<IShikimoriApi>("https://shikimori.one/api"));
     }
