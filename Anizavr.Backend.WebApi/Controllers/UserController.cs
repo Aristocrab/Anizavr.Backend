@@ -84,9 +84,9 @@ public class UserController : BaseController
     
     [AllowAnonymous]
     [HttpGet("getUsersLeaderbord")]
-    public Task<List<UserDto>> GetUsersLeaderbord()
+    public Task<List<UserDto>> GetUsersLeaderboard()
     {
-        return _userService.GetUsersLeaderbord();
+        return _userService.GetUsersLeaderboard();
     }
     
     [HttpPost("addComment")]
