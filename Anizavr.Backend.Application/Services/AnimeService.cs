@@ -1,5 +1,4 @@
-﻿using Anizavr.Backend.Application.Configuration;
-using Anizavr.Backend.Application.KodikApi;
+﻿using Anizavr.Backend.Application.KodikApi;
 using Anizavr.Backend.Application.Shared;
 using Anizavr.Backend.Application.ShikimoriApi;
 using Anizavr.Backend.Domain.Entities.Kodik;
@@ -16,19 +15,16 @@ namespace Anizavr.Backend.Application.Services;
 public class AnimeService : IAnimeService
 {
     private readonly IShikimoriClient _shikimoriClient;
-    private readonly IKodikApi _kodikApi;
+    private readonly IKodikService _kodikService;
     private readonly IShikimoriApi _shikimoriApi;
-    private readonly IApplicationConfiguration _configuration;
 
     public AnimeService(IShikimoriClient shikimoriClient, 
-        IKodikApi kodikApi, 
-        IShikimoriApi shikimoriApi,
-        IApplicationConfiguration configuration)
+        IKodikService kodikService, 
+        IShikimoriApi shikimoriApi)
     {
         _shikimoriClient = shikimoriClient;
-        _kodikApi = kodikApi;
+        _kodikService = kodikService;
         _shikimoriApi = shikimoriApi;
-        _configuration = configuration;
     }
 
     #region Anime info
@@ -45,7 +41,7 @@ public class AnimeService : IAnimeService
             throw new NotFoundException("Аниме", nameof(id), id.ToString());
         }
         
-        var kodikDetails = await _kodikApi.GetAnime(id, _configuration.KodikKey);
+        var kodikDetails = await _kodikService.GetAnime(id);
         if (id == AnimeHelper.DeathNoteId)
         {
             AnimeHelper.FixDeathNotePoster(shikimoriDetails);
@@ -103,15 +99,7 @@ public class AnimeService : IAnimeService
     
     public async Task<KodikResults> SearchAnime(string query, string? genres = null)
     {
-        KodikResults search;
-        if (genres is null)
-        {
-            search = await _kodikApi.SearchAnime(query, _configuration.KodikKey);
-        }
-        else
-        {
-            search = await _kodikApi.SearchAnime(query, genres);
-        }
+        var search = await _kodikService.SearchAnime(query);
 
         // Взять по одному переводу с каждого аниме
         var distinctResults = search.Results
