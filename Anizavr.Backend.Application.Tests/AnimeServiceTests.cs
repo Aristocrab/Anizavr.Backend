@@ -1,4 +1,3 @@
-using Anizavr.Backend.Application.Configuration;
 using Anizavr.Backend.Application.KodikApi;
 using Anizavr.Backend.Application.Services;
 using Anizavr.Backend.Application.ShikimoriApi;
@@ -20,18 +19,17 @@ public class AnimeServiceTests
 {
     private readonly IFixture _fixture = new Fixture();
     private readonly IShikimoriClient _shikimoriClient;
-    private readonly IKodikApi _kodikApi;
+    private readonly IKodikService _kodikApi;
     private readonly IShikimoriApi _shikimoriApi;
     private readonly IAnimeService _animeService;
 
     public AnimeServiceTests()
     {
         _shikimoriClient = Substitute.For<IShikimoriClient>();
-        _kodikApi = Substitute.For<IKodikApi>();
+        _kodikApi = Substitute.For<IKodikService>();
         _shikimoriApi = Substitute.For<IShikimoriApi>();
-        var configuration = _fixture.Create<ApplicationConfiguration>();
         
-        _animeService = new AnimeService(_shikimoriClient, _kodikApi, _shikimoriApi, configuration);
+        _animeService = new AnimeService(_shikimoriClient, _kodikApi, _shikimoriApi);
     }
 
     [Fact]
@@ -45,7 +43,7 @@ public class AnimeServiceTests
         _shikimoriClient.GetAnime(animeId).Returns(shikimoriDetails);
 
         var kodikResults = _fixture.Create<KodikResults>();
-        _kodikApi.GetAnime(animeId, Arg.Any<string>()).Returns(kodikResults);
+        _kodikApi.GetAnime(animeId).Returns(kodikResults);
 
         // Act
         var result = await _animeService.GetAnimeById(animeId);
@@ -117,7 +115,7 @@ public class AnimeServiceTests
         var query = "Attack on Titan";
         var kodikResults = _fixture.Create<KodikResults>();
         
-        _kodikApi.SearchAnime(query, "").ReturnsForAnyArgs(kodikResults);
+        _kodikApi.SearchAnime(query).ReturnsForAnyArgs(kodikResults);
 
         // Act
         var result = await _animeService.SearchAnime(query);
