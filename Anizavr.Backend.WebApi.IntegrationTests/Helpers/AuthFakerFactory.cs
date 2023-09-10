@@ -3,20 +3,17 @@ using Bogus;
 
 namespace Anizavr.Backend.WebApi.IntegrationTests.Helpers;
 
-public class TestAuthFactory
+public class AuthFakerFactory
 {
-    private readonly Faker<LoginDto> _loginDtoFaker;
-    private readonly Faker<RegisterDto> _registerDtoFaker;
-
-    public TestAuthFactory()
+    public AuthFakerFactory()
     {
-        _loginDtoFaker = new Faker<LoginDto>()
+        LoginDtoFaker = new Faker<LoginDto>()
             .RuleFor(x => x.Password, 
                 f => f.Internet.Password())
             .RuleFor(x => x.Email, 
                 f => f.Person.Email);
         
-        _registerDtoFaker = new Faker<RegisterDto>()
+        RegisterDtoFaker = new Faker<RegisterDto>()
             .RuleFor(x => x.Username, 
                 f => f.Random.String2(6, 12))
             .RuleFor(x => x.Password, 
@@ -25,13 +22,7 @@ public class TestAuthFactory
                 f => f.Person.Email);
     }
     
-    public LoginDto CreateLoginDto()
-    {
-        return _loginDtoFaker.Generate();
-    }
-    
-    public RegisterDto CreateRegisterDto()
-    {
-        return _registerDtoFaker.Generate();
-    }
+    public Faker<LoginDto> LoginDtoFaker { get; }
+
+    public Faker<RegisterDto> RegisterDtoFaker { get; }
 }
