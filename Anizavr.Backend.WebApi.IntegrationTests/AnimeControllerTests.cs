@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
+using Anizavr.Backend.Application.Dtos;
+using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.Services;
-using Anizavr.Backend.Domain.Entities;
-using Anizavr.Backend.Domain.Entities.Kodik;
-using Anizavr.Backend.Domain.Entities.Shikimori;
+using Anizavr.Backend.Application.ShikimoriApi.Entities;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -38,12 +38,12 @@ public class AnimeControllerTests
     public async Task GetAnimeById_EndpointReturnsAnime()
     {
         // Arrange
-        var expectedAnime = _fixture.Create<Anime>();
+        var expectedAnime = _fixture.Create<AnimeDto>();
         _animeService.GetAnimeById(Arg.Any<long>()).Returns(expectedAnime);
 
         // Act
         var response = await _client.GetAsync("/api/getAnime/1");
-        var anime = await response.Content.ReadFromJsonAsync<Anime>();
+        var anime = await response.Content.ReadFromJsonAsync<AnimeDto>();
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -99,8 +99,7 @@ public class AnimeControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         animeList.Should().NotBeNull();
-        animeList!.Results.Should().NotBeEmpty();
-        animeList.Results.Should().NotBeEmpty();
+        animeList!.Results.Should().NotBeNullOrEmpty();
     }
     
     [Fact]
@@ -116,8 +115,7 @@ public class AnimeControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        animeList.Should().NotBeNull();
-        animeList.Should().NotBeEmpty();
+        animeList.Should().NotBeNullOrEmpty();
     }
     
     [Fact]
@@ -133,8 +131,7 @@ public class AnimeControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        animeList.Should().NotBeNull();
-        animeList.Should().NotBeEmpty();
+        animeList.Should().NotBeNullOrEmpty();
     }
     
     [Fact]
@@ -150,8 +147,7 @@ public class AnimeControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        animeList.Should().NotBeNull();
-        animeList.Should().NotBeEmpty();
+        animeList.Should().NotBeNullOrEmpty();
     }
     
     [Fact]
@@ -167,7 +163,6 @@ public class AnimeControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        genres.Should().NotBeNull();
-        genres.Should().NotBeEmpty();
+        genres.Should().NotBeNullOrEmpty();
     }
 }
