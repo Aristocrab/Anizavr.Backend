@@ -1,8 +1,9 @@
-﻿namespace Anizavr.Backend.Domain.Entities;
+﻿using Anizavr.Backend.Domain.Common;
 
-public class Comment
+namespace Anizavr.Backend.Domain.Entities;
+
+public class Comment : BaseEntity
 {
-    public Guid Id { get; set; }
     public required User Author { get; set; }
     public required long AnimeId { get; set; }
     public required string Text { get; set; }

@@ -1,8 +1,9 @@
-﻿namespace Anizavr.Backend.Domain.Entities;
+﻿using Anizavr.Backend.Domain.Common;
 
-public class TierlistAnime
+namespace Anizavr.Backend.Domain.Entities;
+
+public class TierlistAnime : BaseEntity
 {
-    public Guid Id { get; set; }
     public int Position { get; set; }
     public required long AnimeId { get; set; }
     public required int EpisodesTotal { get; set; }

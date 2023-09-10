@@ -1,8 +1,9 @@
-﻿namespace Anizavr.Backend.Domain.Entities;
+﻿using Anizavr.Backend.Domain.Common;
 
-public class WishlistAnime
+namespace Anizavr.Backend.Domain.Entities;
+
+public class WishlistAnime : BaseEntity
 {
-    public Guid Id { get; set; }
     public required long AnimeId { get; set; }
     public required int EpisodesTotal { get; set; }
     public required string Title { get; set; }

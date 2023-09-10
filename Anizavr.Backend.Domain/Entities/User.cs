@@ -1,14 +1,14 @@
-﻿namespace Anizavr.Backend.Domain.Entities;
+﻿using Anizavr.Backend.Domain.Common;
 
-public class User
+namespace Anizavr.Backend.Domain.Entities;
+
+public class User : BaseEntity
 {
-    public Guid Id { get; set; }
     public required string Username { get; set; }
     public required string Email { get; set; }
     public required string PasswordHash { get; set; }
     public required string Salt { get; set; }
     public required string AvatarUrl { get; set; }
-
     public required List<UserWatchingAnime> CurrentlyWatchingAnime { get; set; }
     public required List<UserWatchedAnime> WatchedAnime { get; set; }
     public required List<WishlistAnime> Wishlist { get; set; }

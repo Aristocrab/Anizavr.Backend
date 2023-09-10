@@ -1,7 +1,9 @@
-﻿namespace Anizavr.Backend.Domain.Entities;
+﻿using Anizavr.Backend.Domain.Common;
 
-public class UserWatchingAnime {
-    public Guid Id { get; set; }
+namespace Anizavr.Backend.Domain.Entities;
+
+public class UserWatchingAnime : BaseEntity
+{
     public required long AnimeId { get; set; }
     public required int CurrentEpisode { get; set; }
     public required int EpisodesTotal { get; set; }
