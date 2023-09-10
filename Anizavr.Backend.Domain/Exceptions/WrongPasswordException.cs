@@ -2,8 +2,7 @@
 
 public class WrongPasswordException : Exception
 {
-    public WrongPasswordException(string username)
-        : base($"Неправильный пароль")
+    public WrongPasswordException() : base("Неправильный пароль")
     {
         
     }
