@@ -3,12 +3,12 @@ using Bogus;
 
 namespace Anizavr.Backend.WebApi.IntegrationTests.Helpers;
 
-public class AuthFactory
+public class TestAuthFactory
 {
     private readonly Faker<LoginDto> _loginDtoFaker;
     private readonly Faker<RegisterDto> _registerDtoFaker;
 
-    public AuthFactory()
+    public TestAuthFactory()
     {
         _loginDtoFaker = new Faker<LoginDto>()
             .RuleFor(x => x.Password, 

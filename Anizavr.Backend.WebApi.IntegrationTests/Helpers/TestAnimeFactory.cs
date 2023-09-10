@@ -3,11 +3,11 @@ using ShikimoriSharp.Classes;
 
 namespace Anizavr.Backend.WebApi.IntegrationTests.Helpers;
 
-public class AnimeFactory
+public class TestAnimeFactory
 {
     private readonly AnimeID _anime;
 
-    public AnimeFactory()
+    public TestAnimeFactory()
     {
         var fixture = new Fixture();
         _anime = fixture.Create<AnimeID>();

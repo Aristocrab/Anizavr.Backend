@@ -23,12 +23,14 @@ public class UserControllerTests
     private readonly HttpClient _client;
     private readonly IAnizavrDbContext _dbContext;
     private readonly IUserService _userService;
-    private readonly AuthFactory _authFactory;
+    
+    private readonly TestAuthFactory _testAuthFactory;
     private readonly AnimeID _testAnime;
 
     public UserControllerTests()
     {
-        _authFactory = new AuthFactory();
+        _testAuthFactory = new TestAuthFactory();
+        _testAnime = new TestAnimeFactory().GetTestAnime();
         
         var contextOptions = new DbContextOptionsBuilder<AnizavrDbContext>()
             .UseInMemoryDatabase("AnizavrDb")
@@ -36,21 +38,16 @@ public class UserControllerTests
         _dbContext = new AnizavrDbContext(contextOptions);
 
         var animeService = Substitute.For<IAnimeService>();
-        _testAnime = new AnimeFactory().GetTestAnime();
         animeService
             .GetShikimoriAnimeById(Arg.Any<long>())
             .Returns(Task.FromResult(_testAnime));
         
         var registerDtoValidator = new RegisterDtoValidatior();
         var loginDtoValidator = new LoginDtoValidator();
-        _userService = new UserService(
-            _dbContext, 
-            animeService, 
-            registerDtoValidator, 
-            loginDtoValidator);
+        
+        _userService = new UserService(_dbContext, animeService, registerDtoValidator, loginDtoValidator);
 
         var factory = new WebApplicationFactory<Program>();
-        
         _client = factory.WithWebHostBuilder(builder =>
         {            
             builder.ConfigureTestServices(services =>
@@ -64,7 +61,7 @@ public class UserControllerTests
     public async Task Register_EndpointReturnsUserId_WhenRegisterDtoIsValid()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         
         // Act
         var response = await _client.PostAsJsonAsync("/api/users/register", registerDto);
@@ -104,7 +101,7 @@ public class UserControllerTests
     public async Task Register_EndpointReturnsException_WhenUserWithSameDataAlreadyExists()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         await _client.PostAsJsonAsync("/api/users/register", registerDto);
         
         // Act
@@ -118,7 +115,7 @@ public class UserControllerTests
     public async Task Login_EndpointReturnsUserId_WhenLoginDtoIsValid()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         await _client.PostAsJsonAsync("/api/users/register", registerDto);
         
         var loginDto = new LoginDto
@@ -159,7 +156,7 @@ public class UserControllerTests
     public async Task Login_EndpointReturnsNotFound_WhenUserDoesNotExist()
     {
         // Arrange
-        var loginDto = _authFactory.CreateLoginDto();
+        var loginDto = _testAuthFactory.CreateLoginDto();
         _dbContext.Users.RemoveRange(_dbContext.Users);
         
         // Act
@@ -173,7 +170,7 @@ public class UserControllerTests
     public async Task GetUser_EndpointReturnsUser_WhenUserExists()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var userId = await _userService.Register(registerDto);
         
         // Act
@@ -204,7 +201,7 @@ public class UserControllerTests
     public async Task GetCurrentUser_EndpointReturnsCurrentUser()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -270,13 +267,13 @@ public class UserControllerTests
     public async Task AddComment_EndpointAddsComment()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
         
         var addCommentDto = new AddCommentDto
         {
-            AnimeId = 1,
+            AnimeId = _testAnime.Id,
             Text = "This is a test comment."
         };
 
@@ -292,7 +289,7 @@ public class UserControllerTests
     public async Task DeleteComment_EndpointDeletesComment()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -327,7 +324,7 @@ public class UserControllerTests
     public async Task AddAnimeToWatchedList_EndpointAddsAnimeToWatchedList()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -343,7 +340,7 @@ public class UserControllerTests
     public async Task AddAnimeToWatchingList_EndpointAddsAnimeToWatchingList()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -365,7 +362,7 @@ public class UserControllerTests
     public async Task AddAnimeToWishlist_EndpointAddsAnimeToWishlist()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -381,7 +378,7 @@ public class UserControllerTests
     public async Task FinishEpisode_EndpointFinishesEpisode()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -405,7 +402,7 @@ public class UserControllerTests
     public async Task UpdateTimestamps_EndpointUpdatesTimestamps()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -428,7 +425,7 @@ public class UserControllerTests
     public async Task RemoveAnimeFromWatchingList_EndpointRemovesAnimeFromWatchingList()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -450,7 +447,7 @@ public class UserControllerTests
     public async Task RemoveAnimeFromWishlist_EndpointRemovesAnimeFromWishlist()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
         
@@ -469,7 +466,7 @@ public class UserControllerTests
     public async Task AddAnimeToTierlist_EndpointAddsAnimeToTierlist()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
         
@@ -485,7 +482,7 @@ public class UserControllerTests
     public async Task ChangeTierlistOrder_EndpointChangesTierlistOrder()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
         
@@ -502,7 +499,7 @@ public class UserControllerTests
     public async Task RemoveAnimeFromTierlist_EndpointRemovesAnimeFromTierlist()
     {
         // Arrange
-        var registerDto = _authFactory.CreateRegisterDto();
+        var registerDto = _testAuthFactory.CreateRegisterDto();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
