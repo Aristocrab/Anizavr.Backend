@@ -1,13 +1,13 @@
-﻿using Anizavr.Backend.Domain.Entities.Kodik;
-using Anizavr.Backend.Domain.Entities.Shikimori;
+﻿using Anizavr.Backend.Application.Dtos;
+using Anizavr.Backend.Application.KodikApi.Entities;
+using Anizavr.Backend.Application.ShikimoriApi.Entities;
 using ShikimoriSharp.Classes;
-using Anime = Anizavr.Backend.Domain.Entities.Anime;
 
 namespace Anizavr.Backend.Application.Services;
 
 public interface IAnimeService
 {
-    Task<Anime> GetAnimeById(long id);
+    Task<AnimeDto> GetAnimeById(long id);
     Task<AnimeID> GetShikimoriAnimeById(long id);
     Task<ShikimoriRelated[]> GetRelated(long id);
     Task<List<AnimePreview>> GetSimilarAnime(long id);

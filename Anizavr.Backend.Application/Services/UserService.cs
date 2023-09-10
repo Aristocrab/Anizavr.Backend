@@ -1,6 +1,6 @@
-﻿using Anizavr.Backend.Application.Database;
+﻿using Anizavr.Backend.Application.Common;
+using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Dtos;
-using Anizavr.Backend.Application.Shared;
 using Anizavr.Backend.Domain.Entities;
 using Anizavr.Backend.Domain.Exceptions;
 using FluentValidation;
@@ -47,7 +47,7 @@ public class UserService : IUserService
         var avatarUrl =
             $"https://api.dicebear.com/6.x/thumbs/svg?seed={registerDto.Username}&shapeColor=43aa52&backgroundColor=daf9d9";
 
-        var (hash, salt) = Hashing.HashPassword(registerDto.Password);
+        var (hash, salt) = HashingHelper.HashPassword(registerDto.Password);
         
         var user = new User
         {
@@ -78,9 +78,9 @@ public class UserService : IUserService
             throw new NotFoundException("Пользователь", nameof(loginDto.Email), loginDto.Email);
         }
         
-        if (user.PasswordHash != Hashing.HashPassword(loginDto.Password, user.Salt))
+        if (user.PasswordHash != HashingHelper.HashPassword(loginDto.Password, user.Salt))
         {
-            throw new WrongPasswordException(loginDto.Email);
+            throw new WrongPasswordException();
         }
 
         return user.Id;
@@ -126,7 +126,7 @@ public class UserService : IUserService
     
     #endregion
     
-    #region Anime Comments
+    #region AnimeDto Comments
     
     public async Task<List<CommentDto>> GetAnimeComments(long animeId)
     {
@@ -208,7 +208,7 @@ public class UserService : IUserService
             {
                 if(user.CurrentlyWatchingAnime.Any(x => x.AnimeId == animeId)) return;
                 var anime = _animeService.GetShikimoriAnimeById(animeId).Result;
-                var userAnime = AnimeHelper.CreateUserWatchingAnime(anime, currentEpisode, secondsTotal);
+                var userAnime = UserAnimeFactory.CreateUserWatchingAnime(anime, currentEpisode, secondsTotal);
                 user.CurrentlyWatchingAnime.Add(userAnime);
             }
         }
@@ -283,7 +283,7 @@ public class UserService : IUserService
         {
             if (user.WatchedAnime.All(x => x.AnimeId != animeId))
             {
-                    var userAnime = AnimeHelper.CreateUserWatchedAnime(anime, userScore, currentEpisode);
+                    var userAnime = UserAnimeFactory.CreateUserWatchedAnime(anime, userScore, currentEpisode);
                     user.WatchedAnime.Add(userAnime);
                     _dbContext.SaveChanges();
             }
@@ -303,7 +303,7 @@ public class UserService : IUserService
         {
             if (user.Wishlist.All(x => x.AnimeId != animeId))
             {
-                var userAnime = AnimeHelper.CreateWishlistAnime(anime);
+                var userAnime = UserAnimeFactory.CreateWishlistAnime(anime);
                 user.Wishlist.Add(userAnime);
                 _dbContext.SaveChanges();
             }
@@ -339,7 +339,7 @@ public class UserService : IUserService
         {
             if (user.Tierlist.All(x => x.AnimeId != animeId))
             {
-                var userAnime = AnimeHelper.CreateTierlistAnime(anime, tierlist+1);
+                var userAnime = UserAnimeFactory.CreateTierlistAnime(anime, tierlist+1);
                 user.Tierlist.Add(userAnime);
                 _dbContext.SaveChanges();
             }

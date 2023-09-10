@@ -19,9 +19,10 @@ public class ShikimoriModule : AppModule
             configuration.ShikimoriClientName, 
             configuration.ShikimoriClientId, 
             configuration.ShikimoriClientKey);
+        
         var client = new ShikimoriClient(logger, settings);
-        builder.Services.AddSingleton<IShikimoriClient>(new ShikimoriClientAdapter(client));
-
-        builder.Services.AddSingleton(RestService.For<IShikimoriApi>("https://shikimori.one/api"));
+        var shikimoriRestService = RestService.For<IShikimoriApi>("https://shikimori.one/api");
+        
+        builder.Services.AddSingleton<IShikimoriClient>(new ShikimoriClientAdapter(client, shikimoriRestService));
     }
 }

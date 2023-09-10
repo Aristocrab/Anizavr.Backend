@@ -13,6 +13,6 @@ public class KodikModule : AppModule
         
         var kodikApi = RestService.For<IKodikApi>("https://kodikapi.com");
         var kodikService = new KodikApiAdapter(kodikApi, configuration.KodikKey);
-        builder.Services.AddSingleton<IKodikService>(kodikService);
+        builder.Services.AddSingleton<IKodikClient>(kodikService);
     }
 }

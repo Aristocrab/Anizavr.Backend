@@ -1,9 +1,8 @@
-﻿using Anizavr.Backend.Application.KodikApi;
-using Anizavr.Backend.Domain.Entities.Kodik;
+﻿using Anizavr.Backend.Application.KodikApi.Entities;
 
-namespace Anizavr.Backend.WebApi.Modules.Kodik;
+namespace Anizavr.Backend.Application.KodikApi;
 
-public class KodikApiAdapter : IKodikService
+public class KodikApiAdapter : IKodikClient
 {
     private readonly IKodikApi _kodikApi;
     private readonly string _kodikKey;

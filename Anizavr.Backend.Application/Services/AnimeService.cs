@@ -1,35 +1,31 @@
-﻿using Anizavr.Backend.Application.KodikApi;
-using Anizavr.Backend.Application.Shared;
+﻿using Anizavr.Backend.Application.Common;
+using Anizavr.Backend.Application.Dtos;
+using Anizavr.Backend.Application.KodikApi;
+using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.ShikimoriApi;
-using Anizavr.Backend.Domain.Entities.Kodik;
-using Anizavr.Backend.Domain.Entities.Shikimori;
+using Anizavr.Backend.Application.ShikimoriApi.Entities;
 using Anizavr.Backend.Domain.Exceptions;
 using Mapster;
 using ShikimoriSharp.Classes;
 using ShikimoriSharp.Enums;
 using ShikimoriSharp.Settings;
-using Anime = Anizavr.Backend.Domain.Entities.Anime;
 
 namespace Anizavr.Backend.Application.Services;
 
 public class AnimeService : IAnimeService
 {
     private readonly IShikimoriClient _shikimoriClient;
-    private readonly IKodikService _kodikService;
-    private readonly IShikimoriApi _shikimoriApi;
+    private readonly IKodikClient _kodikClient;
 
-    public AnimeService(IShikimoriClient shikimoriClient, 
-        IKodikService kodikService, 
-        IShikimoriApi shikimoriApi)
+    public AnimeService(IShikimoriClient shikimoriClient, IKodikClient kodikClient)
     {
         _shikimoriClient = shikimoriClient;
-        _kodikService = kodikService;
-        _shikimoriApi = shikimoriApi;
+        _kodikClient = kodikClient;
     }
 
-    #region Anime info
+    #region AnimeDto info
 
-    public async Task<Anime> GetAnimeById(long id)
+    public async Task<AnimeDto> GetAnimeById(long id)
     {
         AnimeID shikimoriDetails;
         try
@@ -41,13 +37,13 @@ public class AnimeService : IAnimeService
             throw new NotFoundException("Аниме", nameof(id), id.ToString());
         }
         
-        var kodikDetails = await _kodikService.GetAnime(id);
-        if (id == AnimeHelper.DeathNoteId)
+        var kodikDetails = await _kodikClient.GetAnime(id);
+        if (id == DeathNoteFixHelper.DeathNoteId)
         {
-            AnimeHelper.FixDeathNotePoster(shikimoriDetails);
+            DeathNoteFixHelper.FixDeathNotePoster(shikimoriDetails);
         }
 
-        var anime = new Anime
+        var anime = new AnimeDto
         {
             ShikimoriDetails = shikimoriDetails,
             KodikDetails = kodikDetails
@@ -82,14 +78,14 @@ public class AnimeService : IAnimeService
 
     public async Task<List<AnimePreview>> GetSimilarAnime(long id)
     {
-        if (id == AnimeHelper.DeathNoteId)
+        if (id == DeathNoteFixHelper.DeathNoteId)
         {
-            return AnimeHelper.AnimeSimilarToDeathNote;
+            return DeathNoteFixHelper.AnimeSimilarToDeathNote;
         }
 
         var similar = await _shikimoriClient.GetSimilar(id);
 
-        AnimeHelper.FixDeathNotePoster(similar.FirstOrDefault(x => x.Id == AnimeHelper.DeathNoteId));
+        DeathNoteFixHelper.FixDeathNotePoster(similar.FirstOrDefault(x => x.Id == DeathNoteFixHelper.DeathNoteId));
         return similar.Adapt<List<AnimePreview>>();
     }
 
@@ -99,7 +95,7 @@ public class AnimeService : IAnimeService
     
     public async Task<KodikResults> SearchAnime(string query, string? genres = null)
     {
-        var search = await _kodikService.SearchAnime(query);
+        var search = await _kodikClient.SearchAnime(query);
 
         // Взять по одному переводу с каждого аниме
         var distinctResults = search.Results
@@ -126,7 +122,7 @@ public class AnimeService : IAnimeService
     
     #endregion
 
-    #region Anime lists
+    #region AnimeDto lists
     
     public async Task<List<AnimePreview>> GetPopularAnime(int limit, int page)
     {
@@ -138,7 +134,7 @@ public class AnimeService : IAnimeService
             kind = "tv,movie"
         });
 
-        AnimeHelper.FixDeathNotePoster(popularAnime.FirstOrDefault(x => x.Id == AnimeHelper.DeathNoteId));
+        DeathNoteFixHelper.FixDeathNotePoster(popularAnime.FirstOrDefault(x => x.Id == DeathNoteFixHelper.DeathNoteId));
 
         return popularAnime.Select(x => x.Adapt<AnimePreview>()).ToList();
     }
@@ -148,7 +144,7 @@ public class AnimeService : IAnimeService
         var now = DateTime.Now;
         var yearAgo = DateTime.Now.AddYears(-1);
 
-        var trendingAnime = await _shikimoriApi.GetAnime(
+        var trendingAnime = await _shikimoriClient.GetAnime(
             order: Order.popularity,
             status: "ongoing",
             limit: limit,
@@ -165,7 +161,7 @@ public class AnimeService : IAnimeService
         var now = DateTime.Now;
         var yearAgo = DateTime.Now.AddYears(-1);
         
-        var trendingAnime = await _shikimoriApi.GetAnime(
+        var trendingAnime = await _shikimoriClient.GetAnime(
             order: Order.popularity,
             status: "released",
             limit: limit,
