@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Anizavr.Backend.Application.Validators;
 
-public partial class RegisterDtoValidatior : AbstractValidator<RegisterDto>
+public partial class RegisterDtoValidator : AbstractValidator<RegisterDto>
 {
-    public RegisterDtoValidatior()
+    public RegisterDtoValidator()
     {
         RuleFor(x => x.Email)
             .Must(BeAValidEmail).WithMessage("Некорректный имейл")
