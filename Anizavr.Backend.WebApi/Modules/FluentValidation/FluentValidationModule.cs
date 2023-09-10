@@ -16,6 +16,6 @@ public class FluentValidationModule : AppModule
         });
         
         ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
-        builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidatior>();
+        builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
     }
 }

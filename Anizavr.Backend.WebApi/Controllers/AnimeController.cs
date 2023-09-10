@@ -1,7 +1,7 @@
-﻿using Anizavr.Backend.Application.Services;
-using Anizavr.Backend.Domain.Entities;
-using Anizavr.Backend.Domain.Entities.Kodik;
-using Anizavr.Backend.Domain.Entities.Shikimori;
+﻿using Anizavr.Backend.Application.Dtos;
+using Anizavr.Backend.Application.KodikApi.Entities;
+using Anizavr.Backend.Application.Services;
+using Anizavr.Backend.Application.ShikimoriApi.Entities;
 using Anizavr.Backend.WebApi.Controllers.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ public class AnimeController : BaseController
     }
     
     [HttpGet("getAnime/{id:long}")]
-    public Task<Anime> GetAnimeById(long id)
+    public Task<AnimeDto> GetAnimeById(long id)
     {
         return _animeService.GetAnimeById(id);
     }

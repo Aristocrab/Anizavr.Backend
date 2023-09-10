@@ -12,9 +12,10 @@ public class DatabaseModule : AppModule
         var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IWebApiConfiguration>();
         
         Directory.CreateDirectory(configuration.DatabasePath);
+        
         builder.Services.AddDbContext<AnizavrDbContext>(options =>
             options.UseSqlite(configuration.ConnectionString));
-
+        
         builder.Services.AddScoped<IAnizavrDbContext>(services => 
             services.GetRequiredService<AnizavrDbContext>());
     }
