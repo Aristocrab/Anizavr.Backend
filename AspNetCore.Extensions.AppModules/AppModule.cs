@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 
 namespace AspNetCore.Extensions.AppModules;
 
-public class AppModule : IAppModule
+public abstract class AppModule : IAppModule
 {
     public virtual void ConfigureServices(WebApplicationBuilder builder) { }
 
