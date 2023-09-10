@@ -51,7 +51,6 @@ public class UserControllerTests
 
         var factory = new WebApplicationFactory<Program>();
         
-        Environment.SetEnvironmentVariable("ANIZAVR_JwtSecretKey", "JwtSecretKey134567890987654321234567890");
         _client = factory.WithWebHostBuilder(builder =>
         {            
             builder.ConfigureTestServices(services =>
