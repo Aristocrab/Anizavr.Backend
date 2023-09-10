@@ -2,6 +2,6 @@
 
 public class AddCommentDto
 {
-    public required long AnimeId { get; set; }
-    public required string Text { get; set; }
+    public required long AnimeId { get; init; }
+    public required string Text { get; init; }
 }

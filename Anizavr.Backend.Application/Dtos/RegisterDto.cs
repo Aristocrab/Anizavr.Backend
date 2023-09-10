@@ -2,8 +2,7 @@
 
 public class RegisterDto
 {
-    public string Username { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string Password { get; set; } = null!;
-    // public IFormFile? Avatar { get; set; }
+    public required string Username { get; init; }
+    public required string Email { get; init; }
+    public required string Password { get; init; }
 }
