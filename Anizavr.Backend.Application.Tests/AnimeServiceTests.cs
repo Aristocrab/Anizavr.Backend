@@ -1,8 +1,8 @@
 using Anizavr.Backend.Application.KodikApi;
+using Anizavr.Backend.Application.KodikApi.Entities;
 using Anizavr.Backend.Application.Services;
 using Anizavr.Backend.Application.ShikimoriApi;
-using Anizavr.Backend.Domain.Entities.Kodik;
-using Anizavr.Backend.Domain.Entities.Shikimori;
+using Anizavr.Backend.Application.ShikimoriApi.Entities;
 using AutoFixture;
 using FluentAssertions;
 using Mapster;
@@ -19,17 +19,15 @@ public class AnimeServiceTests
 {
     private readonly IFixture _fixture = new Fixture();
     private readonly IShikimoriClient _shikimoriClient;
-    private readonly IKodikService _kodikApi;
-    private readonly IShikimoriApi _shikimoriApi;
+    private readonly IKodikClient _kodikApi;
     private readonly IAnimeService _animeService;
 
     public AnimeServiceTests()
     {
         _shikimoriClient = Substitute.For<IShikimoriClient>();
-        _kodikApi = Substitute.For<IKodikService>();
-        _shikimoriApi = Substitute.For<IShikimoriApi>();
+        _kodikApi = Substitute.For<IKodikClient>();
         
-        _animeService = new AnimeService(_shikimoriClient, _kodikApi, _shikimoriApi);
+        _animeService = new AnimeService(_shikimoriClient, _kodikApi);
     }
 
     [Fact]
@@ -149,7 +147,7 @@ public class AnimeServiceTests
         // Arrange
         var trendingAnime = _fixture.CreateMany<Anime>().ToArray();
 
-        _shikimoriApi
+        _shikimoriClient
             .GetAnime(Arg.Any<Order>(), 
                 Arg.Any<string>(), 
                 Arg.Any<int>(), 
@@ -173,7 +171,7 @@ public class AnimeServiceTests
         // Arrange
         var justReleasedAnime = _fixture.CreateMany<Anime>().ToArray();
 
-        _shikimoriApi
+        _shikimoriClient
             .GetAnime(Arg.Any<Order>(), 
                 Arg.Any<string>(), 
                 Arg.Any<int>(), 

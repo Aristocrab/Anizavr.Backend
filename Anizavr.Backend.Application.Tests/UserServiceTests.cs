@@ -32,7 +32,7 @@ public class UserServiceTests
         anime.Id = 1;
         anime.Episodes = 26;
         animeService.GetShikimoriAnimeById(Arg.Any<long>()).Returns(Task.FromResult(anime));
-        var registerDtoValidator = new RegisterDtoValidatior();
+        var registerDtoValidator = new RegisterDtoValidator();
         var loginDtoValidator = new LoginDtoValidator();
         _userService = new UserService(_dbContext, animeService, registerDtoValidator, loginDtoValidator);
     }
