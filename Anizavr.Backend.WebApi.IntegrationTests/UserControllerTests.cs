@@ -6,6 +6,7 @@ using Anizavr.Backend.Application.Dtos;
 using Anizavr.Backend.Application.Services;
 using Anizavr.Backend.Application.Validators;
 using Anizavr.Backend.WebApi.IntegrationTests.Helpers;
+using Bogus;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -23,12 +24,16 @@ public class UserControllerTests
     private readonly IAnizavrDbContext _dbContext;
     private readonly IUserService _userService;
     
-    private readonly AuthFakerFactory _authFakerFactory;
     private readonly AnimeID _testAnime;
+    private readonly Faker<LoginDto> _loginDtoFaker;
+    private readonly Faker<RegisterDto> _registerDtoFaker;
 
     public UserControllerTests()
     {
-        _authFakerFactory = new AuthFakerFactory();
+        var authFakerFactory = new AuthFakerFactory();
+        _loginDtoFaker = authFakerFactory.GetLoginDtoFaker();
+        _registerDtoFaker = authFakerFactory.GetRegisterDtoFaker();
+        
         _testAnime = new TestAnimeFactory().GetTestAnime();
         
         var contextOptions = new DbContextOptionsBuilder<AnizavrDbContext>()
@@ -60,7 +65,7 @@ public class UserControllerTests
     public async Task Register_EndpointReturnsUserId_WhenRegisterDtoIsValid()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         
         // Act
         var response = await _client.PostAsJsonAsync("/api/users/register", registerDto);
@@ -100,7 +105,7 @@ public class UserControllerTests
     public async Task Register_EndpointReturnsException_WhenUserWithSameDataAlreadyExists()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         await _client.PostAsJsonAsync("/api/users/register", registerDto);
         
         // Act
@@ -114,7 +119,7 @@ public class UserControllerTests
     public async Task Login_EndpointReturnsUserId_WhenLoginDtoIsValid()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         await _client.PostAsJsonAsync("/api/users/register", registerDto);
         
         var loginDto = new LoginDto
@@ -155,7 +160,7 @@ public class UserControllerTests
     public async Task Login_EndpointReturnsNotFound_WhenUserDoesNotExist()
     {
         // Arrange
-        var loginDto = _authFakerFactory.LoginDtoFaker.Generate();
+        var loginDto = _loginDtoFaker.Generate();
         _dbContext.Users.RemoveRange(_dbContext.Users);
         
         // Act
@@ -169,7 +174,7 @@ public class UserControllerTests
     public async Task GetUser_EndpointReturnsUser_WhenUserExists()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var userId = await _userService.Register(registerDto);
         
         // Act
@@ -200,7 +205,7 @@ public class UserControllerTests
     public async Task GetCurrentUser_EndpointReturnsCurrentUser()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -218,7 +223,7 @@ public class UserControllerTests
     public async Task GetUsersLeaderboard_EndpointReturnsLeaderboard()
     {
         // Arrange
-        var registerDtos = _authFakerFactory.RegisterDtoFaker.Generate(10);
+        var registerDtos = _registerDtoFaker.Generate(10);
         _dbContext.Users.RemoveRange(_dbContext.Users);
         foreach (var registerDto in registerDtos)
         {
@@ -259,7 +264,7 @@ public class UserControllerTests
     public async Task AddComment_EndpointAddsComment()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
         
@@ -281,7 +286,7 @@ public class UserControllerTests
     public async Task DeleteComment_EndpointDeletesComment()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -316,7 +321,7 @@ public class UserControllerTests
     public async Task AddAnimeToWatchedList_EndpointAddsAnimeToWatchedList()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -332,7 +337,7 @@ public class UserControllerTests
     public async Task AddAnimeToWatchingList_EndpointAddsAnimeToWatchingList()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -354,7 +359,7 @@ public class UserControllerTests
     public async Task AddAnimeToWishlist_EndpointAddsAnimeToWishlist()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -370,7 +375,7 @@ public class UserControllerTests
     public async Task FinishEpisode_EndpointFinishesEpisode()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -394,7 +399,7 @@ public class UserControllerTests
     public async Task UpdateTimestamps_EndpointUpdatesTimestamps()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -417,7 +422,7 @@ public class UserControllerTests
     public async Task RemoveAnimeFromWatchingList_EndpointRemovesAnimeFromWatchingList()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 
@@ -439,7 +444,7 @@ public class UserControllerTests
     public async Task RemoveAnimeFromWishlist_EndpointRemovesAnimeFromWishlist()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
         
@@ -458,7 +463,7 @@ public class UserControllerTests
     public async Task AddAnimeToTierlist_EndpointAddsAnimeToTierlist()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
         
@@ -474,7 +479,7 @@ public class UserControllerTests
     public async Task ChangeTierlistOrder_EndpointChangesTierlistOrder()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
         
@@ -491,7 +496,7 @@ public class UserControllerTests
     public async Task RemoveAnimeFromTierlist_EndpointRemovesAnimeFromTierlist()
     {
         // Arrange
-        var registerDto = _authFakerFactory.RegisterDtoFaker.Generate();
+        var registerDto = _registerDtoFaker.Generate();
         var registerResponse = await _client.PostAsJsonAsync("/api/users/register", registerDto);
         var jwtToken = await registerResponse.Content.ReadAsStringAsync();
 

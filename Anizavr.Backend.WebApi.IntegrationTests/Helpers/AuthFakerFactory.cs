@@ -5,15 +5,18 @@ namespace Anizavr.Backend.WebApi.IntegrationTests.Helpers;
 
 public class AuthFakerFactory
 {
+    private readonly Faker<LoginDto> _loginDtoFaker;
+    private readonly Faker<RegisterDto> _registerDtoFaker;
+
     public AuthFakerFactory()
     {
-        LoginDtoFaker = new Faker<LoginDto>()
+        _loginDtoFaker = new Faker<LoginDto>()
             .RuleFor(x => x.Password, 
                 f => f.Internet.Password())
             .RuleFor(x => x.Email, 
                 f => f.Person.Email);
         
-        RegisterDtoFaker = new Faker<RegisterDto>()
+        _registerDtoFaker = new Faker<RegisterDto>()
             .RuleFor(x => x.Username, 
                 f => f.Random.String2(6, 12))
             .RuleFor(x => x.Password, 
@@ -21,8 +24,14 @@ public class AuthFakerFactory
             .RuleFor(x => x.Email, 
                 f => f.Person.Email);
     }
-    
-    public Faker<LoginDto> LoginDtoFaker { get; }
 
-    public Faker<RegisterDto> RegisterDtoFaker { get; }
+    public Faker<LoginDto> GetLoginDtoFaker()
+    {
+        return _loginDtoFaker;
+    }
+    
+    public Faker<RegisterDto> GetRegisterDtoFaker()
+    {
+        return _registerDtoFaker;
+    }
 }
