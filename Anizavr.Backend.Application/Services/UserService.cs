@@ -5,9 +5,7 @@ using Anizavr.Backend.Domain.Entities;
 using Anizavr.Backend.Domain.Exceptions;
 using FluentValidation;
 using Mapster;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ShikimoriSharp.Classes;
 using Comment = Anizavr.Backend.Domain.Entities.Comment;
 using User = Anizavr.Backend.Domain.Entities.User;
 
@@ -90,50 +88,13 @@ public class UserService : IUserService
     
     #endregion
     
-    #region Avatar Management
-    
-    private static async Task<string> SaveAvatar(IFormFile file, string username)
-    {
-        var avatarDirectory = $"{Directory.GetCurrentDirectory()}/Images/Avatars"; 
-        Directory.CreateDirectory(avatarDirectory);
-
-        var newFileName = $"{username}_{file.FileName}";
-        var fullPath = $"{avatarDirectory}/{newFileName}";
-
-        Console.WriteLine(fullPath);
-
-        await using var fileStream = new FileStream(fullPath, FileMode.Create);
-        await file.CopyToAsync(fileStream);
-        
-        var avatarUrl = $"/avatars/{newFileName}";
-        return avatarUrl;
-    }
-    
-    public async Task<string> ChangeUserAvatar(Guid userId, IFormFile avatar)
-    {
-        var user = await _dbContext.Users
-            .FirstOrDefaultAsync(x => x.Id == userId);
-        if (user is null)
-        {
-            throw new NotFoundException("Пользователь", nameof(userId), userId.ToString());
-        }
-
-        var newAvatarUrl = await SaveAvatar(avatar, user.Username);
-        user.AvatarUrl = newAvatarUrl;
-        await _dbContext.SaveChangesAsync();
-
-        return newAvatarUrl;
-    }
-    
-    #endregion
-    
     #region User Information
     
-    public async Task<List<UserDto>> GetUsersLeaderbord()
+    public async Task<List<UserDto>> GetUsersLeaderboard()
     {
         var users = await _dbContext.Users
             .Include(x => x.WatchedAnime)
-            .OrderByDescending(x => x.WatchedAnime.Select(y => y.CurrentEpisode))
+            .OrderByDescending(x => x.WatchedAnime.Count)
             .ProjectToType<UserDto>()
             .ToListAsync();
         
@@ -247,7 +208,7 @@ public class UserService : IUserService
             {
                 if(user.CurrentlyWatchingAnime.Any(x => x.AnimeId == animeId)) return;
                 var anime = _animeService.GetShikimoriAnimeById(animeId).Result;
-                var userAnime = CreateUserWatchingAnime(anime, currentEpisode, secondsTotal);
+                var userAnime = AnimeHelper.CreateUserWatchingAnime(anime, currentEpisode, secondsTotal);
                 user.CurrentlyWatchingAnime.Add(userAnime);
             }
         }
@@ -322,7 +283,7 @@ public class UserService : IUserService
         {
             if (user.WatchedAnime.All(x => x.AnimeId != animeId))
             {
-                    var userAnime = CreateUserWatchedAnime(anime, userScore, currentEpisode);
+                    var userAnime = AnimeHelper.CreateUserWatchedAnime(anime, userScore, currentEpisode);
                     user.WatchedAnime.Add(userAnime);
                     _dbContext.SaveChanges();
             }
@@ -342,7 +303,7 @@ public class UserService : IUserService
         {
             if (user.Wishlist.All(x => x.AnimeId != animeId))
             {
-                var userAnime = CreateWishlistAnime(anime);
+                var userAnime = AnimeHelper.CreateWishlistAnime(anime);
                 user.Wishlist.Add(userAnime);
                 _dbContext.SaveChanges();
             }
@@ -371,13 +332,14 @@ public class UserService : IUserService
     {
         var user = await GetUserById(userId);
         var anime = await _animeService.GetShikimoriAnimeById(animeId);
-        var tierlist = user.Tierlist.OrderBy(x => x.Position).Select(x => x.Position).Last();
+        var tierlist = user.Tierlist.OrderBy(x => x.Position).Select(x => x.Position)
+            .LastOrDefault();
 
         lock (Lock)
         {
             if (user.Tierlist.All(x => x.AnimeId != animeId))
             {
-                var userAnime = CreateTierlistAnime(anime, tierlist+1);
+                var userAnime = AnimeHelper.CreateTierlistAnime(anime, tierlist+1);
                 user.Tierlist.Add(userAnime);
                 _dbContext.SaveChanges();
             }
@@ -463,82 +425,5 @@ public class UserService : IUserService
         return user;
     }
 
-    private static UserWatchingAnime CreateUserWatchingAnime(AnimeID anime, int currentEpisode, float secondsTotal)
-    {
-        if (anime.Id == AnimeHelper.DeathNoteId)
-        {
-            AnimeHelper.FixDeathNotePoster(anime);
-        }
-
-        return new UserWatchingAnime
-        {
-            AnimeId = anime.Id,
-            EpisodesTotal = (int)anime.Episodes,
-            CurrentEpisode = currentEpisode,
-            Title = anime.Russian,
-            PosterUrl = anime.Image.Original,
-            Rating = anime.Score,
-            SecondsWatched = 0,
-            SecondsTotal = secondsTotal,
-            Kind = anime.Kind
-        };
-    }
-
-    private static UserWatchedAnime CreateUserWatchedAnime(AnimeID anime, int? userScore, int? currentEpisode)
-    {
-        if (anime.Id == AnimeHelper.DeathNoteId)
-        {
-            AnimeHelper.FixDeathNotePoster(anime);
-        }
-        
-        return new UserWatchedAnime
-        {
-            AnimeId = anime.Id,
-            EpisodesTotal = (int)anime.Episodes,
-            CurrentEpisode = currentEpisode ?? (int)anime.Episodes,
-            Title = anime.Russian,
-            PosterUrl = anime.Image.Original,
-            Rating = anime.Score,
-            UserScore = userScore
-        };
-    }
-
-    private static WishlistAnime CreateWishlistAnime(AnimeID anime)
-    {
-        if (anime.Id == AnimeHelper.DeathNoteId)
-        {
-            AnimeHelper.FixDeathNotePoster(anime);
-        }
-        
-        return new WishlistAnime
-        {
-            AnimeId = anime.Id,
-            EpisodesTotal = (int)anime.Episodes,
-            Title = anime.Russian,
-            PosterUrl = anime.Image.Original,
-            Rating = anime.Score,
-            Kind = anime.Kind
-        };
-    }
-    
-    private static TierlistAnime CreateTierlistAnime(AnimeID anime, int position)
-    {
-        if (anime.Id == AnimeHelper.DeathNoteId)
-        {
-            AnimeHelper.FixDeathNotePoster(anime);
-        }
-        
-        return new TierlistAnime
-        {
-            AnimeId = anime.Id,
-            EpisodesTotal = (int)anime.Episodes,
-            Title = anime.Russian,
-            PosterUrl = anime.Image.Original,
-            Rating = anime.Score,
-            Position = position
-        };
-    }
-
     #endregion
-
 }

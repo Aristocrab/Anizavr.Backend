@@ -7,11 +7,11 @@ using ShikimoriSharp.Settings;
 
 namespace Anizavr.Backend.Application.ShikimoriApi;
 
-public class ShikimoriClientWrapper : IShikimoriClient
+public class ShikimoriClientAdapter : IShikimoriClient
 {
     private readonly Animes _animes;
 
-    public ShikimoriClientWrapper(ShikimoriClient shikimoriClient)
+    public ShikimoriClientAdapter(ShikimoriClient shikimoriClient)
     {
         _animes = new Animes(shikimoriClient.Client);
     }

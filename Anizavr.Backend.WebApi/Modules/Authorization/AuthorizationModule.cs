@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Anizavr.Backend.WebApi.Configuration;
 using AspNetCore.Extensions.AppModules;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,18 +9,18 @@ public class AuthorizationModule : AppModule
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        var configuration = builder.Configuration;
+        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IWebApiConfiguration>();
         
         builder.Services.AddAuthentication("Bearer").AddJwtBearer(
             config =>
             {
                 config.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidAudience = configuration["Jwt:Audience"],
-                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration.JwtAudience,
+                    ValidIssuer = configuration.JwtIssuer,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration["ANIZAVR_JwtSecretKey"]!
-                            )),
+                        Encoding.UTF8.GetBytes(configuration.JwtSecretKey)
+                        ),
                     ValidateLifetime = false
                 };
             });

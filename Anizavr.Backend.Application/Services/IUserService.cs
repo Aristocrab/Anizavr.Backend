@@ -7,7 +7,7 @@ public interface IUserService
     Task<Guid> Register(RegisterDto registerDto);
     Task<Guid> Login(LoginDto loginDto);
     
-    Task<List<UserDto>> GetUsersLeaderbord();
+    Task<List<UserDto>> GetUsersLeaderboard();
     Task<UserDto> GetUser(Guid userId);
     Task<UserDto> GetUser(string username);
     
