@@ -7,8 +7,6 @@ namespace AspNetCore.Extensions.AppModules;
 
 public static class AppModulesExtensions
 {
-    #region AddModules
-
     private static Func<Type, bool> AppModulesPredicate => 
         type => typeof(AppModule).IsAssignableFrom(type) && type is { IsAbstract: false };
 
@@ -59,10 +57,6 @@ public static class AppModulesExtensions
         builder.Services.AddSingleton(modulesCollection);
     }
 
-    #endregion
-    
-    #region UseModules
-
     public static void UseModules(this WebApplication app)
     {
         var modulesCollection = app.Services.GetRequiredService<AppModulesCollection>();
@@ -76,6 +70,4 @@ public static class AppModulesExtensions
             .GetRequiredService<ILogger<AppModule>>();
         logger.LogDebug("AppModules ({Count}) configured", modulesCollection.AppModules.Count);
     }
-    
-    #endregion
 }
