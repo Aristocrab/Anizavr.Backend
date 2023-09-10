@@ -7,9 +7,6 @@
     </PropertyGroup>
 
 
-    <ItemGroup>
-      <PackageReference Include="ShikimoriSharp" Version="1.3.4" />
-    </ItemGroup>
 
 
 
