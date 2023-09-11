@@ -7,7 +7,7 @@ public static class ConfigurationExtensions
         var value = configuration[name];
         if (value is null or "")
         {
-            throw new Exception($"Configuration value {name} is not set");
+            throw new ArgumentException($"Configuration value {name} is not set", nameof(name));
         }
 
         return value;
