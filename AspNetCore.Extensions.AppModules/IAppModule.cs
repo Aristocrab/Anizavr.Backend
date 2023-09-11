@@ -4,9 +4,9 @@ namespace AspNetCore.Extensions.AppModules;
 
 public interface IAppModule
 {
-    void ConfigureServices(WebApplicationBuilder builder);
+    void ConfigureServices(WebApplicationBuilder builder) {}
 
-    void ConfigureApplication(WebApplication app);
+    void ConfigureApplication(WebApplication app) {}
     
     bool Enabled { get; set; }
     

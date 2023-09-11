@@ -7,19 +7,24 @@ namespace Anizavr.Backend.WebApi.Modules.Authorization;
 
 public class AuthorizationModule : AppModule
 {
+    private readonly IWebApiConfiguration _configuration;
+
+    public AuthorizationModule(IWebApiConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IWebApiConfiguration>();
-        
         builder.Services.AddAuthentication("Bearer").AddJwtBearer(
             config =>
             {
                 config.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidAudience = configuration.JwtAudience,
-                    ValidIssuer = configuration.JwtIssuer,
+                    ValidAudience = _configuration.JwtAudience,
+                    ValidIssuer = _configuration.JwtIssuer,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration.JwtSecretKey)
+                        Encoding.UTF8.GetBytes(_configuration.JwtSecretKey)
                         ),
                     ValidateLifetime = false
                 };

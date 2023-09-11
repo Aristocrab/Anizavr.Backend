@@ -10,15 +10,20 @@ namespace Anizavr.Backend.WebApi.Modules.Shikimori;
 
 public class ShikimoriModule : AppModule
 {
+    private readonly IWebApiConfiguration _configuration;
+
+    public ShikimoriModule(IWebApiConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IWebApiConfiguration>();
-        
         var logger = Substitute.For<ILogger>();
         var settings = new ClientSettings(
-            configuration.ShikimoriClientName, 
-            configuration.ShikimoriClientId, 
-            configuration.ShikimoriClientKey);
+            _configuration.ShikimoriClientName, 
+            _configuration.ShikimoriClientId, 
+            _configuration.ShikimoriClientKey);
         
         var client = new ShikimoriClient(logger, settings);
         var shikimoriRestService = RestService.For<IShikimoriApi>("https://shikimori.one/api");
