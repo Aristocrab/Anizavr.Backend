@@ -5,7 +5,7 @@ using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Dtos;
 using Anizavr.Backend.Application.Services;
 using Anizavr.Backend.Application.Validators;
-using Anizavr.Backend.WebApi.IntegrationTests.Helpers;
+using Anizavr.Backend.WebApi.IntegrationTests.Common;
 using Bogus;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;

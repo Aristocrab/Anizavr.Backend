@@ -1,7 +1,7 @@
 ﻿using Anizavr.Backend.Application.Dtos;
 using Bogus;
 
-namespace Anizavr.Backend.WebApi.IntegrationTests.Helpers;
+namespace Anizavr.Backend.WebApi.IntegrationTests.Common;
 
 public class AuthFakerFactory
 {

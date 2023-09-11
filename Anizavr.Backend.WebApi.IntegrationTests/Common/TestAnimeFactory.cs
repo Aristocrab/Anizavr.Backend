@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using ShikimoriSharp.Classes;
 
-namespace Anizavr.Backend.WebApi.IntegrationTests.Helpers;
+namespace Anizavr.Backend.WebApi.IntegrationTests.Common;
 
 public class TestAnimeFactory
 {
