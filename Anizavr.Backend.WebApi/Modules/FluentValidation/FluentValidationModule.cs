@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using AspNetCore.Extensions.AppModules;
 using Anizavr.Backend.Application.Validators;
+using AspNetCore.Extensions.AppModules.ModuleTypes;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,5 +1,6 @@
 ﻿using AspNetCore.Extensions.AppModules;
 using Anizavr.Backend.Application.Services;
+using AspNetCore.Extensions.AppModules.ModuleTypes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Anizavr.Backend.WebApi.Modules.Common;

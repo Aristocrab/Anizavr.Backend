@@ -1,7 +1,8 @@
+using AspNetCore.Extensions.AppModules.ModuleTypes;
+
 namespace AspNetCore.Extensions.AppModules;
 
 public class AppModulesCollection
 {
-    public List<IAppModule> AppModules { get; } = new();
-    public List<IConfigurationModule> ConfigurationModules { get; } = new();
+    public List<AppModule> AppModules { get; } = new();
 }

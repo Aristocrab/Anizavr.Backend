@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Extensions.AppModules;
+using AspNetCore.Extensions.AppModules.ModuleTypes;
 using Serilog;
 using Serilog.Events;
 

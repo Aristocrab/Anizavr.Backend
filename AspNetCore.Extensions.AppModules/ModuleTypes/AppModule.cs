@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 
-namespace AspNetCore.Extensions.AppModules;
+namespace AspNetCore.Extensions.AppModules.ModuleTypes;
 
-public abstract class AppModule : IAppModule
+public abstract class AppModule
 {
     public virtual void ConfigureServices(WebApplicationBuilder builder) { }
 

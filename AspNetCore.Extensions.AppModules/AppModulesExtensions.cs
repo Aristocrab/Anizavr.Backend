@@ -1,4 +1,5 @@
 using System.Reflection;
+using AspNetCore.Extensions.AppModules.ModuleTypes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -7,11 +8,11 @@ namespace AspNetCore.Extensions.AppModules
 {
     public static class AppModulesExtensions
     {
-        private static readonly Func<Type, bool> IsNonAbstractIAppModule =
-            type => typeof(IAppModule).IsAssignableFrom(type) && !type.IsAbstract;
+        private static readonly Func<Type, bool> IsNonAbstractAppModule =
+            type => typeof(AppModule).IsAssignableFrom(type) && !type.IsAbstract;
 
-        private static readonly Func<Type, bool> IsNonAbstractIConfigurationModule =
-            type => typeof(IConfigurationModule).IsAssignableFrom(type) && !type.IsAbstract;
+        private static readonly Func<Type, bool> IsNonAbstractConfigurationModule =
+            type => typeof(ConfigurationAppModule).IsAssignableFrom(type) && !type.IsAbstract;
 
         public static void AddModules(this WebApplicationBuilder builder)
         {
@@ -28,14 +29,14 @@ namespace AspNetCore.Extensions.AppModules
         {
             foreach (var assembly in assemblies)
             {
-                var configurationModules = assembly.GetTypes().Where(IsNonAbstractIConfigurationModule);
+                var configurationModules = assembly.GetTypes().Where(IsNonAbstractConfigurationModule);
 
                 var configurationInstances = configurationModules
                     .Select(Activator.CreateInstance)
-                    .Cast<IConfigurationModule>()
+                    .Cast<ConfigurationAppModule>()
                     .ToList();
 
-                foreach (var instance in configurationInstances)
+                foreach (var instance in configurationInstances.OrderBy(x => x.OrderIndex))
                 {
                     if (instance.Enabled)
                     {
@@ -54,11 +55,11 @@ namespace AspNetCore.Extensions.AppModules
             {
                 var builderServiceProvider = builder.Services.BuildServiceProvider();
 
-                var modules = assembly.GetTypes().Where(IsNonAbstractIAppModule);
+                var modules = assembly.GetTypes().Where(IsNonAbstractAppModule);
 
                 var instances = modules
                     .Select(x => ActivatorUtilities.CreateInstance(builderServiceProvider, x))
-                    .Cast<IAppModule>()
+                    .Cast<AppModule>()
                     .ToList();
 
                 foreach (var instance in instances.OrderBy(x => x.OrderIndex))

@@ -1,6 +1,7 @@
 ﻿using AspNetCore.Extensions.AppModules;
 using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.WebApi.Configuration;
+using AspNetCore.Extensions.AppModules.ModuleTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Anizavr.Backend.WebApi.Modules.Database;

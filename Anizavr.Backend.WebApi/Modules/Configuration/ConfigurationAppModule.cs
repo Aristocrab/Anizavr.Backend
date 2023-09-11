@@ -1,11 +1,12 @@
 ﻿using Anizavr.Backend.WebApi.Configuration;
 using AspNetCore.Extensions.AppModules;
+using AspNetCore.Extensions.AppModules.ModuleTypes;
 
 namespace Anizavr.Backend.WebApi.Modules.Configuration;
 
-public class ConfigurationModule : IConfigurationModule
+public class ConfigurationModule : ConfigurationAppModule
 {
-    public void ConfigureServices(WebApplicationBuilder builder)
+    public override void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.Configuration.AddEnvironmentVariables("ANIZAVR_");
         var config = builder.Configuration;

@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Anizavr.Backend.WebApi.Configuration;
 using AspNetCore.Extensions.AppModules;
+using AspNetCore.Extensions.AppModules.ModuleTypes;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Anizavr.Backend.WebApi.Modules.Authorization;
