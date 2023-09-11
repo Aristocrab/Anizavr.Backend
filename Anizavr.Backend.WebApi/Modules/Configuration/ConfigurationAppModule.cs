@@ -1,5 +1,4 @@
 ﻿using Anizavr.Backend.WebApi.Configuration;
-using AspNetCore.Extensions.AppModules;
 using AspNetCore.Extensions.AppModules.ModuleTypes;
 
 namespace Anizavr.Backend.WebApi.Modules.Configuration;

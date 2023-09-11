@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using AspNetCore.Extensions.AppModules;
 using AspNetCore.Extensions.AppModules.ModuleTypes;
 using Serilog;
 
