@@ -29,9 +29,12 @@ public class UserServiceTests
         var animeService = Substitute.For<IAnimeService>();
         var fixture = new Fixture();
         var anime = fixture.Create<AnimeID>();
-        anime.Id = 1;
         anime.Episodes = 26;
-        animeService.GetShikimoriAnimeById(Arg.Any<long>()).Returns(Task.FromResult(anime));
+        animeService.GetShikimoriAnimeById(Arg.Any<long>()).Returns(x =>
+        {
+            anime.Id = (long)x[0];
+            return Task.FromResult(anime);
+        });
         var registerDtoValidator = new RegisterDtoValidator();
         var loginDtoValidator = new LoginDtoValidator();
         _userService = new UserService(_dbContext, animeService, registerDtoValidator, loginDtoValidator);
@@ -460,7 +463,10 @@ public class UserServiceTests
             .RuleFor(x => x.Email, f => f.Person.Email);
         var registerDto = faker.Generate();
         var userId = await _userService.Register(registerDto);
+        
+        _dbContext.Tierlist.RemoveRange(_dbContext.Tierlist);
         await _userService.AddAnimeToTierlist(userId, animeId);
+        await _userService.AddAnimeToTierlist(userId, animeId + 1);
 
         // Act
         await _userService.ChangeTierlistOrder(userId, animeId, newPosition);
@@ -470,6 +476,10 @@ public class UserServiceTests
         var animeInTierlist = user.Tierlist.FirstOrDefault(x => x.AnimeId == animeId);
         animeInTierlist.Should().NotBeNull();
         animeInTierlist!.Position.Should().Be(newPosition);
+        
+        var animeInTierlist2 = user.Tierlist.FirstOrDefault(x => x.AnimeId == animeId + 1);
+        animeInTierlist2.Should().NotBeNull();
+        animeInTierlist2!.Position.Should().Be(1);
     }
 
     [Fact]
