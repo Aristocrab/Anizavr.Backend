@@ -75,8 +75,7 @@ namespace AspNetCore.Extensions.AppModules
                 logger ??= builder.Services
                     .BuildServiceProvider()
                     .GetRequiredService<ILogger<AppModule>>();
-                logger.LogDebug("[{Assembly}] AppModules found: {AppModulesCount}",
-                    assembly.GetName().Name, modulesCollection.AppModules.Count);
+                logger.LogDebug("Assembly: {Assembly} ({Count})", assembly.GetName().Name, instances.Count);
 
                 foreach (var instance in instances.OrderBy(x => x.GetType().Name))
                 {
@@ -91,17 +90,10 @@ namespace AspNetCore.Extensions.AppModules
         {
             var modulesCollection = app.Services.GetRequiredService<AppModulesCollection>();
 
-            foreach (var module in modulesCollection.AppModules)
+            foreach (var module in modulesCollection.AppModules.Where(module => module.Enabled))
             {
-                if (module.Enabled)
-                {
-                    module.ConfigureApplication(app);
-                }
+                module.ConfigureApplication(app);
             }
-
-            var logger = app.Services
-                .GetRequiredService<ILogger<AppModule>>();
-            logger.LogDebug("AppModules ({Count}) configured", modulesCollection.AppModules.Count);
         }
     }
 }
