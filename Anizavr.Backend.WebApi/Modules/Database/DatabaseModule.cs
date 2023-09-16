@@ -1,4 +1,5 @@
-﻿using Anizavr.Backend.Application.Database;
+﻿using Anizavr.Backend.Application.Interfaces;
+using Anizavr.Backend.Persistence.Database;
 using Anizavr.Backend.WebApi.Configuration;
 using AspNetCore.Extensions.AppModules.ModuleTypes;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +19,10 @@ public class DatabaseModule : AppModule
     {
         Directory.CreateDirectory(_configuration.DatabasePath);
         
-        builder.Services.AddDbContext<AnizavrDbContext>(options =>
+        builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlite(_configuration.ConnectionString));
         
-        builder.Services.AddScoped<IAnizavrDbContext>(services => 
-            services.GetRequiredService<AnizavrDbContext>());
+        builder.Services.AddScoped<IAppDbContext>(services => 
+            services.GetRequiredService<AppDbContext>());
     }
 }

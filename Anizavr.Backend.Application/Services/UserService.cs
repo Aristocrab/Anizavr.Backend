@@ -1,6 +1,6 @@
 ﻿using Anizavr.Backend.Application.Common;
-using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Dtos;
+using Anizavr.Backend.Application.Interfaces;
 using Anizavr.Backend.Domain.Entities;
 using Anizavr.Backend.Domain.Exceptions;
 using FluentValidation;
@@ -13,14 +13,14 @@ namespace Anizavr.Backend.Application.Services;
 
 public class UserService : IUserService
 {
-    private readonly IAnizavrDbContext _dbContext;
+    private readonly IAppDbContext _dbContext;
     private readonly IAnimeService _animeService;
     private readonly IValidator<RegisterDto> _registerDtoValidator;
     private readonly IValidator<LoginDto> _loginDtoValidator;
     
     private static readonly object Lock = new();
 
-    public UserService(IAnizavrDbContext dbContext, IAnimeService animeService,
+    public UserService(IAppDbContext dbContext, IAnimeService animeService,
         IValidator<RegisterDto> registerDtoValidator, IValidator<LoginDto> loginDtoValidator)
     {
         _dbContext = dbContext;

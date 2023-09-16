@@ -1,10 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Json;
-using Anizavr.Backend.Application.Database;
 using Anizavr.Backend.Application.Dtos;
+using Anizavr.Backend.Application.Interfaces;
 using Anizavr.Backend.Application.Services;
 using Anizavr.Backend.Application.Validators;
+using Anizavr.Backend.Persistence.Database;
 using Anizavr.Backend.WebApi.IntegrationTests.Common;
 using Bogus;
 using FluentAssertions;
@@ -21,7 +22,7 @@ namespace Anizavr.Backend.WebApi.IntegrationTests;
 public class UserControllerTests
 {
     private readonly HttpClient _client;
-    private readonly IAnizavrDbContext _dbContext;
+    private readonly IAppDbContext _dbContext;
     private readonly IUserService _userService;
     
     private readonly AnimeID _testAnime;
@@ -36,10 +37,10 @@ public class UserControllerTests
         
         _testAnime = new TestAnimeFactory().GetTestAnime();
         
-        var contextOptions = new DbContextOptionsBuilder<AnizavrDbContext>()
+        var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase("AnizavrDb")
             .Options;
-        _dbContext = new AnizavrDbContext(contextOptions);
+        _dbContext = new AppDbContext(contextOptions);
 
         var animeService = Substitute.For<IAnimeService>();
         animeService

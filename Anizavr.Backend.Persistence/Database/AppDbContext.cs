@@ -1,11 +1,12 @@
-﻿using Anizavr.Backend.Domain.Entities;
+﻿using Anizavr.Backend.Application.Interfaces;
+using Anizavr.Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Anizavr.Backend.Application.Database;
+namespace Anizavr.Backend.Persistence.Database;
 
-public sealed class AnizavrDbContext : DbContext, IAnizavrDbContext
+public sealed class AppDbContext : DbContext, IAppDbContext
 {
-    public AnizavrDbContext(DbContextOptions<AnizavrDbContext> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
         Database.EnsureCreated();
     }

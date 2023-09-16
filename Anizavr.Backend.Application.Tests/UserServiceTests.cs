@@ -1,7 +1,8 @@
-﻿using Anizavr.Backend.Application.Database;
-using Anizavr.Backend.Application.Dtos;
+﻿using Anizavr.Backend.Application.Dtos;
+using Anizavr.Backend.Application.Interfaces;
 using Anizavr.Backend.Application.Services;
 using Anizavr.Backend.Application.Validators;
+using Anizavr.Backend.Persistence.Database;
 using AutoFixture;
 using Bogus;
 using FluentAssertions;
@@ -15,16 +16,16 @@ namespace Anizavr.Backend.Application.Tests;
 
 public class UserServiceTests
 {
-    private readonly IAnizavrDbContext _dbContext;
+    private readonly IAppDbContext _dbContext;
     private readonly IUserService _userService;
     
     public UserServiceTests()
     {
-        var contextOptions = new DbContextOptionsBuilder<AnizavrDbContext>()
+        var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase("AnizavrDb")
             .Options;
 
-        _dbContext = new AnizavrDbContext(contextOptions);
+        _dbContext = new AppDbContext(contextOptions);
 
         var animeService = Substitute.For<IAnimeService>();
         var fixture = new Fixture();
