@@ -52,6 +52,10 @@ public class UserControllerTests
         
         _userService = new UserService(_dbContext, animeService, registerDtoValidator, loginDtoValidator);
 
+        Environment.SetEnvironmentVariable("ANIZAVR_ShikimoriClientKey", "TestKey1234567890987654321234567890");
+        Environment.SetEnvironmentVariable("ANIZAVR_KodikKey", "TestKey1234567890987654321234567890");
+        Environment.SetEnvironmentVariable("ANIZAVR_JwtSecretKey", "TestKey1234567890987654321234567890");
+        
         var factory = new WebApplicationFactory<Program>();
         _client = factory.WithWebHostBuilder(builder =>
         {            

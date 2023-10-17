@@ -24,6 +24,11 @@ public class AnimeControllerTests
     {
         _fixture = new Fixture();
         _animeService = Substitute.For<IAnimeService>();
+
+        Environment.SetEnvironmentVariable("ANIZAVR_ShikimoriClientKey", "TestKey1234567890987654321234567890");
+        Environment.SetEnvironmentVariable("ANIZAVR_KodikKey", "TestKey1234567890987654321234567890");
+        Environment.SetEnvironmentVariable("ANIZAVR_JwtSecretKey", "TestKey1234567890987654321234567890");
+        
         var factory = new WebApplicationFactory<Program>();
         _client = factory.WithWebHostBuilder(builder =>
         {
